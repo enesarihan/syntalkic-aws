@@ -42,6 +42,7 @@ interface SyntalkicCardProps {
   role: string;
   topic: string;
   createdAt?: string;
+  className?: string;
 }
 
 interface AgentProps {

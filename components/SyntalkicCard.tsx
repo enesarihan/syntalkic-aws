@@ -1,39 +1,57 @@
 import dayjs from "dayjs";
-import Image from "next/image";
 import Link from "next/link";
-import { Button } from "./ui/button";
+import { cn } from "@/lib/utils";
+import { Badge } from "./ui/badge";
+import { CalendarIcon, StarIcon } from "lucide-react";
+import { GradientButton } from "./ui/gradient-button";
 
-const SyntalkicCard = ({ id, role, topic, createdAt }: SyntalkicCardProps) => {
+const SyntalkicCard = ({
+  id,
+  role,
+  topic,
+  createdAt,
+  className,
+}: SyntalkicCardProps) => {
   const formattedDate = dayjs(createdAt || Date.now()).format("MMM D , YYYY");
   return (
-    <div className="card-border w-[360px] max-sm:w-full min-h-32">
-      <div className="card-syntalkic">
-        <div>
-          <div className="absolute top-0 right-0 w-fit px-4 py-2 rounded-bl-lg bg-light-600">
-            <p className="badge-text">{topic}</p>
-          </div>
+    <div
+      className={cn(
+        "relative w-[360px] max-sm:w-full overflow-hidden rounded-xl border border-border bg-card transition-all duration-300 hover:shadow-lg hover:-translate-y-1",
+        className
+      )}
+    >
+      <div className="absolute top-0 right-0">
+        <Badge
+          variant="secondary"
+          className="rounded-bl-lg rounded-tr-xl px-4 py-1.5 font-medium"
+        >
+          {topic}
+        </Badge>
+      </div>
 
-          <h3 className="mt-5 capitalize">{role} Chat</h3>
-          <div className="flex flex-row gap-5 mt-3">
-            <div className="flex flex-row gap-2">
-              <Image
-                src={"/calendar.svg"}
-                alt="calendar"
-                width={22}
-                height={22}
-              />
-              <p>{formattedDate}</p>
-            </div>
-            <div className="flex flex-row gap-2 items-center">
-              <Image src={"/star.svg"} alt="star" width={22} height={22} />
-            </div>
+      <div className="p-6 pt-10">
+        <h3 className="text-xl font-semibold capitalize text-foreground mb-3">
+          {role} Chat
+        </h3>
+
+        <div className="flex items-center gap-5 mb-6 text-muted-foreground">
+          <div className="flex items-center gap-2">
+            <CalendarIcon className="h-4 w-4" />
+            <span className="text-sm">{formattedDate}</span>
+          </div>
+          <div className="flex items-center gap-2">
+            <StarIcon className="h-4 w-4 text-amber-400" />
           </div>
         </div>
-        <div className="flex flex-row justify-between">
-          <Button className="not-dark:bg-gray-600">
-            <Link href={`/syntalkic/${id}`}>View Syntalkic</Link>
-          </Button>
-        </div>
+
+        <GradientButton className="w-full" asChild>
+          <Link
+            href={`/syntalkic/${id}`}
+            className="flex items-center justify-center w-full"
+          >
+            View Syntalkic
+          </Link>
+        </GradientButton>
       </div>
     </div>
   );

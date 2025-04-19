@@ -9,17 +9,29 @@ const Footer = () => {
           All rights reserved © {new Date().getFullYear()} Enes SARIHAN
         </p>
         <div className="flex justify-end items-center">
-          <Link href={"https://www.instagram.com/enesarihan/"} className="ml-4">
+          <Link
+            href={"https://www.instagram.com/enesarihan/"}
+            className="ml-4"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
             {" "}
             <FaInstagram size={20} />
           </Link>
-          <Link href={"https://github.com/enesarihan"} className="ml-4">
+          <Link
+            href={"https://github.com/enesarihan"}
+            className="ml-4"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
             {" "}
             <FaGithub size={20} />
           </Link>
           <Link
             href={"https://www.linkedin.com/in/enesarihan/"}
             className="ml-4"
+            target="_blank"
+            rel="noopener noreferrer"
           >
             {" "}
             <FaLinkedin size={20} />

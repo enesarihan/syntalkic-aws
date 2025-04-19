@@ -9,19 +9,32 @@ import {
 } from "@/components/ui/card";
 import { GradientButton } from "@/components/ui/gradient-button";
 import Link from "next/link";
+import Image from "next/image";
 
 const Home: React.FC = () => {
   return (
     <div className="flex flex-col min-h-screen">
       <main className="flex-1">
-        <section className="w-full py-12 md:py-24 lg:py-32 xl:py-48">
-          <div className="container px-4 md:px-6">
+        <section className="relative w-full rounded-lg py-12 md:py-24 lg:py-32 xl:py-48 overflow-hidden">
+          <div className="absolute inset-0 z-0">
+            {" "}
+            <Image
+              src={"/hero-image.jpg"}
+              alt="hero image"
+              layout="fill"
+              objectFit="cover"
+              priority
+              className="blur-sm"
+            />
+          </div>
+          <div className="container relative px-4 mx-auto md:px-6 z-10">
+            {" "}
             <div className="flex flex-col items-center space-y-4 text-center">
               <div className="space-y-2">
-                <h1 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl lg:text-6xl/none">
+                <h1 className="text-3xl text-shadow-lg text-white font-bold tracking-tighter sm:text-4xl md:text-5xl lg:text-6xl/none">
                   Chat with Artificial Intelligence
                 </h1>
-                <p className="mx-auto max-w-[700px] text-gray-500 md:text-xl dark:text-gray-400">
+                <p className="mx-auto text-shadow-md max-w-[700px] text-white md:text-xl ">
                   Engage in natural and fluent conversations with our advanced
                   artificial intelligence technology. Ask your questions, get
                   information, and request assistance.
@@ -41,7 +54,7 @@ const Home: React.FC = () => {
           <div className="container px-4 md:px-6">
             <div className="flex flex-col items-center justify-center space-y-4 text-center">
               <div className="space-y-2">
-                <h2 className="text-3xl font-bold tracking-tighter sm:text-5xl">
+                <h2 className="text-shadow-md text-3xl font-bold tracking-tighter sm:text-5xl">
                   Features
                 </h2>
                 <p className="max-w-[900px] text-gray-500 md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed dark:text-gray-400">
@@ -104,7 +117,7 @@ const Home: React.FC = () => {
           <div className="container px-4 md:px-6">
             <div className="flex flex-col items-center justify-center space-y-4 text-center">
               <div className="space-y-2">
-                <h2 className="text-3xl font-bold tracking-tighter sm:text-5xl">
+                <h2 className="text-3xl text-shadow-md font-bold tracking-tighter sm:text-5xl">
                   How It Works
                 </h2>
                 <p className="max-w-[900px] text-gray-500 md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed dark:text-gray-400">
@@ -163,7 +176,7 @@ const Home: React.FC = () => {
           <div className="container px-4 md:px-6">
             <div className="flex flex-col items-center justify-center space-y-4 text-center">
               <div className="space-y-2">
-                <h2 className="text-3xl font-bold tracking-tighter sm:text-5xl">
+                <h2 className="text-shadow-md text-3xl font-bold tracking-tighter sm:text-5xl">
                   Get Started Now
                 </h2>
                 <p className="max-w-[600px] text-gray-500 md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed dark:text-gray-400">
