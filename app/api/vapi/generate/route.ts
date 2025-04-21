@@ -4,42 +4,58 @@ import { db } from "@/firebase/admin";
 
 export async function POST(request: Request) {
   try {
-    const { role, topic, userid, amount, description } = await request.json();
+    const { role, topic, userid, amount } = await request.json();
 
-    const { text: rawText } = await generateText({
-      model: google("gemini-2.0-flash-001"),
-      prompt: `Prepare interesting and unique questions for a casual conversation.
-        Generate a completely new and diverse set of questions for each request. Avoid repeating question themes or structures.
-        The conversation topic is: ${topic}.
-        The desired number of questions is: ${amount}.
-        The user wants to engage in a conversation with someone who is a: ${role}.
-        Generate questions that this person (${role}) would naturally ask, keeping them engaging and relevant to the topic.
-        Ensure the questions cover a range of conversational styles, including open-ended, thought-provoking, and light-hearted inquiries.
-        And make a description of the conversation. 3-5 sentences. description should be engaging and relevant to the topic. save it in the description field. ${description}
-        Return only the questions in a JSON array format. Do not include any additional text or explanations.
-        The questions will be read by a voice assistant, so avoid using any special characters like / or * that could interfere with speech synthesis.
-        Format the questions as a JSON array: ["Question 1", "Question 2", "Question 3", ...]
-        Thank you!`,
-    });
-
-    // JSON array'i güvenli şekilde ayıklamak için ilk ve son köşeli parantez arasında olan kısmı alalım
-    const jsonMatch = rawText.match(/\[\s*(".*?"\s*(,\s*".*?")*)\s*\]/s);
-
-    if (!jsonMatch) {
-      console.error("No valid JSON array found in text:", rawText);
+    if (!role || !topic || !amount || !userid) {
       return Response.json(
-        { success: false, error: "Invalid questions format" },
+        { success: false, error: "Missing required fields" },
         { status: 400 }
       );
     }
 
-    let parsedQuestions;
+    const { text: rawText } = await generateText({
+      model: google("gemini-2.0-flash-001"),
+      prompt: `Prepare interesting and unique questions for a casual conversation.
+      Generate a completely new and diverse set of questions for each request. Avoid repeating question themes or structures.
+
+      The conversation topic is: ${topic}.
+      The desired number of questions is: ${amount}.
+      The user wants to engage in a conversation with someone who is a: ${role}.
+      Generate questions that this person (${role}) would naturally ask, keeping them engaging and relevant to the topic.
+      Ensure the questions cover a range of conversational styles, including open-ended, thought-provoking, and light-hearted inquiries.
+
+      Also, include a short description (3-5 sentences) of the conversation.
+      Return the result as a valid JSON object with the following structure:
+      {
+        "description": "your engaging description here",
+        "questions": ["Question 1", "Question 2", "Question 3", ...]
+      }
+      
+      Do not include any additional explanation or formatting. Just return the JSON object.`,
+    });
+
+    let result;
     try {
-      parsedQuestions = JSON.parse(jsonMatch[0]);
+      result = JSON.parse(rawText);
     } catch (parseError) {
-      console.error("JSON parse error:", parseError, "Raw:", jsonMatch[0]);
+      console.error("JSON parse error:", parseError, "Raw:", rawText);
       return Response.json(
-        { success: false, error: "Invalid JSON array format" },
+        { success: false, error: "Invalid JSON format from AI" },
+        { status: 400 }
+      );
+    }
+
+    const { description, questions } = result;
+
+    if (
+      !description ||
+      typeof description !== "string" ||
+      !questions ||
+      !Array.isArray(questions) ||
+      questions.length === 0
+    ) {
+      return Response.json(
+        { success: false, error: "Missing or invalid description/questions" },
         { status: 400 }
       );
     }
@@ -47,10 +63,10 @@ export async function POST(request: Request) {
     const syntalkic = {
       role,
       topic,
-      questions: parsedQuestions,
+      questions,
       userId: userid,
       finalized: true,
-      description: description,
+      description,
       createdAt: new Date().toISOString(),
     };
 

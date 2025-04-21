@@ -26,7 +26,7 @@ const ChatPages = async () => {
             Ask your questions, get information, and request assistance.
           </p>
           <GradientButton variant={"variant"} asChild className="max-sm:w-full">
-            <Link href={"/syntalkic"}>Start an Syntalkic</Link>
+            <Link href={"/syntalkic"}>Generate an Syntalkic</Link>
           </GradientButton>
         </div>
         <Image
