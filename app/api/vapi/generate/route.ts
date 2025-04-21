@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { generateText } from "ai";
 import { google } from "@ai-sdk/google";
 import { db } from "@/firebase/admin";
@@ -7,12 +8,13 @@ export async function POST(request: Request) {
     const { role, topic, userid, amount } = await request.json();
 
     if (!role || !topic || !amount || !userid) {
-      return Response.json(
-        { success: false, error: "Missing required fields" },
+      return new Response(
+        JSON.stringify({ success: false, error: "Missing required fields" }),
         { status: 400 }
       );
     }
 
+    // AI modelinden metin alma
     const { text: rawText } = await generateText({
       model: google("gemini-2.0-flash-001"),
       prompt: `Prepare interesting and unique questions for a casual conversation.
@@ -39,8 +41,11 @@ export async function POST(request: Request) {
       result = JSON.parse(rawText);
     } catch (parseError) {
       console.error("JSON parse error:", parseError, "Raw:", rawText);
-      return Response.json(
-        { success: false, error: "Invalid JSON format from AI" },
+      return new Response(
+        JSON.stringify({
+          success: false,
+          error: "Invalid JSON format from AI",
+        }),
         { status: 400 }
       );
     }
@@ -54,8 +59,11 @@ export async function POST(request: Request) {
       !Array.isArray(questions) ||
       questions.length === 0
     ) {
-      return Response.json(
-        { success: false, error: "Missing or invalid description/questions" },
+      return new Response(
+        JSON.stringify({
+          success: false,
+          error: "Missing or invalid description/questions",
+        }),
         { status: 400 }
       );
     }
@@ -70,15 +78,27 @@ export async function POST(request: Request) {
       createdAt: new Date().toISOString(),
     };
 
-    await db.collection("syntalkics").add(syntalkic);
+    try {
+      await db.collection("syntalkics").add(syntalkic);
+    } catch (firebaseError: any) {
+      console.error("Error saving to Firestore:", firebaseError);
+      return new Response(
+        JSON.stringify({
+          success: false,
+          error: "Error saving to Firestore: " + firebaseError.message,
+        }),
+        { status: 500 }
+      );
+    }
 
-    return Response.json({ success: true }, { status: 200 });
-
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    return new Response(JSON.stringify({ success: true }), { status: 200 });
   } catch (error: any) {
     console.error("POST request error:", error);
-    return Response.json(
-      { success: false, error: error.message || "An error occurred" },
+    return new Response(
+      JSON.stringify({
+        success: false,
+        error: error.message || "An error occurred",
+      }),
       { status: 500 }
     );
   }
