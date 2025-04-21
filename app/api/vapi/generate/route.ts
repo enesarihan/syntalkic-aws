@@ -15,7 +15,7 @@ export async function POST(request: Request) {
         The user wants to engage in a conversation with someone who is a: ${role}.
         Generate questions that this person (${role}) would naturally ask, keeping them engaging and relevant to the topic.
         Ensure the questions cover a range of conversational styles, including open-ended, thought-provoking, and light-hearted inquiries.
-        And make a description of the conversation. 3-5 sentences. description should be engaging and relevant to the topic. description is : ${description}.
+        And make a description of the conversation. 3-5 sentences. description should be engaging and relevant to the topic. save it in the description field. ${description}
         Return only the questions in a JSON array format. Do not include any additional text or explanations.
         The questions will be read by a voice assistant, so avoid using any special characters like / or * that could interfere with speech synthesis.
         Format the questions as a JSON array: ["Question 1", "Question 2", "Question 3", ...]
