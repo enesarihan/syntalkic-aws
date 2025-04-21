@@ -41,3 +41,9 @@ export async function getSyntalkicById(id: string): Promise<Syntalkic | null> {
 
   return syntalkic.data() as Syntalkic | null;
 }
+
+export async function getUserById(userId: string): Promise<User | null> {
+  const user = await db.collection("users").doc(userId).get();
+
+  return user.data() as User | null;
+}
