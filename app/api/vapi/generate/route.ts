@@ -14,7 +14,6 @@ export async function POST(request: Request) {
       );
     }
 
-    // AI modelinden metin alma
     const { text: rawText } = await generateText({
       model: google("gemini-2.0-flash-001"),
       prompt: `Prepare interesting and unique questions for a casual conversation.
@@ -36,11 +35,13 @@ export async function POST(request: Request) {
       Do not include any additional explanation or formatting. Just return the JSON object.`,
     });
 
+    const cleanedText = rawText.replace(/^```json|\n```$/g, "").trim();
+
     let result;
     try {
-      result = JSON.parse(rawText);
+      result = JSON.parse(cleanedText);
     } catch (parseError) {
-      console.error("JSON parse error:", parseError, "Raw:", rawText);
+      console.error("JSON parse error:", parseError, "Raw:", cleanedText);
       return new Response(
         JSON.stringify({
           success: false,
