@@ -4,7 +4,7 @@ import { db } from "@/firebase/admin";
 
 export async function POST(request: Request) {
   try {
-    const { role, topic, userid, amount } = await request.json();
+    const { role, topic, userid, amount, description } = await request.json();
 
     const { text: rawText } = await generateText({
       model: google("gemini-2.0-flash-001"),
@@ -13,8 +13,9 @@ export async function POST(request: Request) {
         The conversation topic is: ${topic}.
         The desired number of questions is: ${amount}.
         The user wants to engage in a conversation with someone who is a: ${role}.
-        Generate questions that this person (${role}) would naturally ask, keeping them engaging,varied in type and address to people ${role} like this.
+        Generate questions that this person (${role}) would naturally ask, keeping them engaging and relevant to the topic.
         Ensure the questions cover a range of conversational styles, including open-ended, thought-provoking, and light-hearted inquiries.
+        And make a description of the conversation. 3-5 sentences. description should be engaging and relevant to the topic. description is : ${description}.
         Return only the questions in a JSON array format. Do not include any additional text or explanations.
         The questions will be read by a voice assistant, so avoid using any special characters like / or * that could interfere with speech synthesis.
         Format the questions as a JSON array: ["Question 1", "Question 2", "Question 3", ...]
@@ -49,6 +50,7 @@ export async function POST(request: Request) {
       questions: parsedQuestions,
       userId: userid,
       finalized: true,
+      description: description,
       createdAt: new Date().toISOString(),
     };
 

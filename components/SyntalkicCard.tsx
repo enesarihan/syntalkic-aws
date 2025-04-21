@@ -11,12 +11,13 @@ const SyntalkicCard = ({
   topic,
   createdAt,
   className,
+  description,
 }: SyntalkicCardProps) => {
   const formattedDate = dayjs(createdAt || Date.now()).format("MMM D , YYYY");
   return (
     <div
       className={cn(
-        "relative w-[360px] max-sm:w-full overflow-hidden rounded-xl border border-border bg-card transition-all duration-300 hover:shadow-lg hover:-translate-y-1",
+        "relative  w-[360px] max-sm:w-full overflow-hidden rounded-xl border border-border bg-card transition-all duration-300 hover:shadow-lg hover:-translate-y-1",
         className
       )}
     >
@@ -42,6 +43,14 @@ const SyntalkicCard = ({
           <div className="flex items-center gap-2">
             <StarIcon className="h-4 w-4 text-amber-400" />
           </div>
+        </div>
+
+        <div className="mb-4">
+          <p className="text-sm text-muted-foreground mb-4">
+            {description && description.length > 150
+              ? description.slice(0, 100) + "..."
+              : description || ""}
+          </p>
         </div>
 
         <GradientButton className="w-full" asChild>
