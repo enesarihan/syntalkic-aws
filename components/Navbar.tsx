@@ -11,12 +11,6 @@ const Navbar = async () => {
         <Logo type="full" className="" />
       </Link>
       <div className="flex flex-row gap-2">
-        <Link
-          href={`/user/${user?.id}`}
-          className="text-sm font-semibold text-gray-900 dark:text-gray-100"
-        >
-          Profile
-        </Link>
         <ModeToggle />
         <SignOutButton userName={user?.name || ""} />
       </div>

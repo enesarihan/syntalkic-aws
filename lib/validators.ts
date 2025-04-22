@@ -10,4 +10,5 @@ export const authFormSchema = (type: FormType) => {
 
 export const updateProfileSchema = z.object({
   name: z.string().min(3),
+  email: z.string().email(),
 });

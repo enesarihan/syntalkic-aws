@@ -8,6 +8,7 @@ interface FormFieldProps<T extends FieldValues> {
   label: string;
   placeholder?: string;
   type?: "text" | "email" | "password" | "file";
+  disVal?: boolean;
 }
 
 const FormField = <T extends FieldValues>({
@@ -15,11 +16,13 @@ const FormField = <T extends FieldValues>({
   name,
   label,
   placeholder,
+  disVal = false,
   type = "text",
 }: FormFieldProps<T>) => (
   <Controller
     control={control}
     name={name}
+    disabled={disVal}
     render={({ field }) => (
       <FormItem>
         <FormLabel className="label">{label}</FormLabel>

@@ -16,6 +16,7 @@ const ProfileForm = () => {
     resolver: zodResolver(updateProfileSchema),
     defaultValues: {
       name: "",
+      email: "",
     },
   });
 
@@ -24,6 +25,7 @@ const ProfileForm = () => {
       if (user) {
         const userData = {
           name: user.displayName || "",
+          email: user.email || "",
         };
         form.reset(userData);
       } else {
@@ -56,6 +58,13 @@ const ProfileForm = () => {
         className="flex flex-col gap-5"
         onSubmit={form.handleSubmit(onSubmit)}
       >
+        <FormField
+          control={form.control}
+          name="email"
+          type="email"
+          label="Email"
+          disVal={true}
+        />
         <FormField
           control={form.control}
           name="name"

@@ -1,52 +1,31 @@
-"use server";
-import { db, auth } from "@/firebase/admin";
-import { FirebaseError } from "firebase/app";
-import { getCurrentUser } from "@/lib/actions/auth.actions"; // varsa
+import { getAuth } from "firebase/auth";
+import { getFirestore, doc, updateDoc } from "firebase/firestore";
+import { updateProfile as firebaseUpdateProfile } from "firebase/auth";
 
-// Firebase Admin ile güncelleme fonksiyonu
 export async function updateProfile(user: { name: string }) {
   try {
-    // Kullanıcı bilgilerini almak için custom auth method
-    const getUser = await getCurrentUser();
-    if (!getUser?.id) throw new Error("User not found");
+    const auth = getAuth();
+    const currentUser = auth.currentUser;
 
-    // Firestore'da kullanıcıyı bulmak
-    const currentUser = await db
-      .collection("users")
-      .where("uid", "==", getUser.id)
-      .get();
+    if (!currentUser) throw new Error("User not Found.");
 
-    if (currentUser.empty) {
-      throw new Error("User not found in Firestore");
-    }
+    const db = getFirestore();
+    const userRef = doc(db, "users", currentUser.uid); // Firestore'da 'users' koleksiyonunda kullanıcı belgelerini güncelliyoruz
 
-    // Firestore kullanıcı belgesini güncelleme
-    await db.collection("users").doc(currentUser.docs[0].id).update({
+    await updateDoc(userRef, {
       name: user.name,
+      displayName: user.name,
     });
 
-    // Firebase Auth'da kullanıcı bilgilerini güncelleme
-    if (getUser) {
-      // Firebase Admin SDK kullanarak auth bilgilerini güncelle
-      await auth.updateUser(getUser.id, {
-        displayName: user.name,
-      });
-    } else {
-      throw new Error("No authenticated user in Firebase Auth");
-    }
+    await firebaseUpdateProfile(currentUser, {
+      displayName: user.name,
+    });
 
     return {
       success: true,
-      message: "Profile updated successfully.",
+      message: "User updated successfully",
     };
-  } catch (error: unknown) {
-    const firebaseError = error as FirebaseError;
-    console.error("Update profile error:", error);
-    return {
-      success: false,
-      message:
-        firebaseError?.message ||
-        "Something went wrong while updating profile.",
-    };
+  } catch (error) {
+    return { success: false, message: "Something went wrong" + error };
   }
 }
