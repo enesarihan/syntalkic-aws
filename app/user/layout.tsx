@@ -1,9 +1,12 @@
-import { ReactNode } from "react";
 import { isAuthenticated } from "@/lib/actions/auth.actions";
 import { redirect } from "next/navigation";
 import Navbar from "@/components/Navbar";
 
-const RootLayouts = async ({ children }: { children: ReactNode }) => {
+const UserLayout = async ({
+  children,
+}: Readonly<{
+  children: React.ReactNode;
+}>) => {
   const isUserAuthenticated = await isAuthenticated();
 
   if (!isUserAuthenticated) redirect("/sign-in");
@@ -15,4 +18,4 @@ const RootLayouts = async ({ children }: { children: ReactNode }) => {
   );
 };
 
-export default RootLayouts;
+export default UserLayout;

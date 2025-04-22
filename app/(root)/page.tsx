@@ -1,3 +1,4 @@
+"use client";
 import { ArrowRight, MessageSquare, Shield, Sparkles } from "lucide-react";
 
 import {
@@ -10,6 +11,7 @@ import {
 import { GradientButton } from "@/components/ui/gradient-button";
 import Link from "next/link";
 import Image from "next/image";
+import AnimatedTextCycle from "@/components/ui/animated-text-cycle";
 
 const Home: React.FC = () => {
   return (
@@ -32,7 +34,27 @@ const Home: React.FC = () => {
             <div className="flex flex-col items-center space-y-4 text-center">
               <div className="space-y-2">
                 <h1 className="text-3xl text-shadow-lg text-white font-bold tracking-tighter sm:text-4xl md:text-5xl lg:text-6xl/none">
-                  Chat with Artificial Intelligence
+                  Chat with Artificial Intelligence about{" "}
+                  <span className="block text-purple-400">
+                    <AnimatedTextCycle
+                      words={[
+                        "Technology",
+                        "Science",
+                        "Health",
+                        "Travel",
+                        "Food",
+                        "Sports",
+                        "Entertainment",
+                        "Education",
+                        "Finance",
+                        "Lifestyle",
+                        "History",
+                        "Art",
+                        "Culture",
+                      ]}
+                      interval={2000}
+                    />
+                  </span>
                 </h1>
                 <p className="mx-auto text-shadow-md max-w-[700px] text-white md:text-xl ">
                   Engage in natural and fluent conversations with our advanced

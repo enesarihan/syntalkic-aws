@@ -1,6 +1,7 @@
 "use server";
 
 import { auth, db } from "@/firebase/admin";
+import { getAuth } from "firebase-admin/auth";
 import { cookies } from "next/headers";
 
 const ONE_WEEK = 60 * 60 * 24 * 7;
@@ -21,6 +22,10 @@ export async function signUp(params: SignUpParams) {
     await db.collection("users").doc(uid).set({
       name: name,
       email: email,
+    });
+
+    await getAuth().updateUser(uid, {
+      displayName: name,
     });
 
     return {

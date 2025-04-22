@@ -26,14 +26,7 @@ import { signIn, signUp, signInWithGoogle } from "@/lib/actions/auth.actions";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import Logo from "./Logo";
-
-const authFormSchema = (type: FormType) => {
-  return z.object({
-    name: type === "sign-up" ? z.string().min(3) : z.string().optional(),
-    email: z.string().email(),
-    password: z.string().min(3),
-  });
-};
+import { authFormSchema } from "@/lib/validators";
 
 export default function AuthForm({ type }: { type: FormType }) {
   const router = useRouter();
