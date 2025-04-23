@@ -7,14 +7,10 @@ import { Button } from "./ui/button";
 import { useEffect, useState } from "react";
 import { isAuthenticated } from "@/lib/actions/auth.actions";
 
-const SignOutButton = ({ userName }: { userName: string }) => {
+const SignOutButton = () => {
   const router = useRouter();
   const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(true);
-
-  const trimName: string = userName.trim();
-  const splitName: string[] = trimName.split(" ");
-  const justName: string = splitName[0];
 
   useEffect(() => {
     const checkAuth = async () => {
@@ -44,8 +40,8 @@ const SignOutButton = ({ userName }: { userName: string }) => {
 
   if (isLoggedIn) {
     return (
-      <Button variant="outline" onClick={handleLogout}>
-        Sign Out as {justName}
+      <Button variant="outline" onClick={handleLogout} className="w-full">
+        Sign Out
       </Button>
     );
   } else {

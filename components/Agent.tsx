@@ -1,12 +1,12 @@
 "use client";
 import { cn } from "@/lib/utils";
 import { vapi } from "@/lib/vapi.sdk";
-import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { GradientButton } from "./ui/gradient-button";
 import { syntalker } from "@/constants";
 import Logo from "./Logo";
+import GetUserPhoto from "./GetUserPhoto";
 
 enum CallStatus {
   INACTIVE = "INACTIVE",
@@ -126,12 +126,10 @@ const Agent = ({
         </div>
         <div className="card-border">
           <div className="card-content">
-            <Image
-              src={"/user-avatar.png"}
-              alt="user-avatar"
-              width={540}
-              height={540}
-              className="rounded-full object-cover size-[120px]"
+            <GetUserPhoto
+              width={"540"}
+              height={"540"}
+              className="flex items-center justify-center text-6xl rounded-full object-cover size-[120px]"
             />
             <h3>{userName}</h3>
           </div>

@@ -137,13 +137,13 @@ export async function signInWithGoogle(idToken: string) {
 
     return {
       success: true,
-      message: "Google ile giriş başarılı.",
+      message: "Signed in with Google successfully..",
     };
   } catch (error) {
-    console.error("Google ile giriş hatası:", error);
+    console.error("Error was signing Google!:", error);
     return {
       success: false,
-      message: "Google ile giriş başarısız.",
+      message: "Error was signing Google!.",
     };
   }
 }

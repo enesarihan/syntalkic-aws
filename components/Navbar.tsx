@@ -1,10 +1,9 @@
 import Link from "next/link";
 import { ModeToggle } from "./Mode-toggle";
-import SignOutButton from "./Sign-Out-Button";
 import Logo from "./Logo";
-import { getCurrentUser } from "@/lib/actions/auth.actions";
+
+import UserButton from "./UserButton";
 const Navbar = async () => {
-  const user = await getCurrentUser();
   return (
     <nav className="flex justify-between">
       <Link href={"/"} className="flex items-center gap-2">
@@ -12,7 +11,7 @@ const Navbar = async () => {
       </Link>
       <div className="flex flex-row gap-2">
         <ModeToggle />
-        <SignOutButton userName={user?.name || ""} />
+        <UserButton />
       </div>
     </nav>
   );
