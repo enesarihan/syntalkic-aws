@@ -3,6 +3,7 @@ import { getAuth, User as GoogleUser, onAuthStateChanged } from "firebase/auth";
 import { useEffect, useState } from "react";
 import Image from "next/image";
 import { cn } from "@/lib/utils";
+import { Button } from "./ui/button";
 
 const GetUserPhoto = ({
   className,
@@ -49,14 +50,14 @@ const GetUserPhoto = ({
     );
   } else {
     return (
-      <div
+      <Button
         className={cn(
-          `w-${width} h-${height} bg-gray-200 dark:bg-slate-500`,
+          `w-${width} h-${height} bg-slate-900 dark:bg-gray-200`,
           className
         )}
       >
         {firstInitial}
-      </div>
+      </Button>
     );
   }
 };

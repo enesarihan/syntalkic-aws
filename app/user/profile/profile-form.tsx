@@ -37,8 +37,6 @@ const ProfileForm = () => {
   }, [form]);
 
   const onSubmit = async (values: z.infer<typeof updateProfileSchema>) => {
-    console.log("Form submitted with values:", values);
-
     try {
       const res = await updateProfile({
         name: values.name,

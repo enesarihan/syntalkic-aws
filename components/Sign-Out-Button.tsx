@@ -35,7 +35,11 @@ const SignOutButton = () => {
   };
 
   if (loading) {
-    return <Button variant="outline">Loading...</Button>;
+    return (
+      <Button variant="outline" className="w-full">
+        Loading...
+      </Button>
+    );
   }
 
   if (isLoggedIn) {
