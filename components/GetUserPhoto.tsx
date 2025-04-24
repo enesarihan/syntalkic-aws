@@ -52,7 +52,7 @@ const GetUserPhoto = ({
     return (
       <Button
         className={cn(
-          `w-${width} h-${height} bg-slate-900 dark:bg-gray-200`,
+          `w-${width} h-${height} p-3 bg-slate-900 dark:bg-gray-200`,
           className
         )}
       >
