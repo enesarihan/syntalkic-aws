@@ -4,6 +4,8 @@ import { useEffect, useState } from "react";
 import Image from "next/image";
 import { cn } from "@/lib/utils";
 import { Button } from "./ui/button";
+import { doc, getDoc } from "firebase/firestore";
+import { db } from "@/firebase/client"; // Firebase Firestore'a bağlantı
 
 const GetUserPhoto = ({
   className,
@@ -16,12 +18,27 @@ const GetUserPhoto = ({
 }) => {
   const [currentUser, setCurrentUser] = useState<GoogleUser | null>(null);
   const [loading, setLoading] = useState(true);
+  const [profileImageUrl, setProfileImageUrl] = useState<string | null>(null); // Firestore'dan alınacak profil fotoğrafı URL'si
 
   useEffect(() => {
     const auth = getAuth();
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       setCurrentUser(user);
       setLoading(false);
+
+      if (user) {
+        const fetchUserProfile = async () => {
+          const userDocRef = doc(db, "users", user.uid);
+          const userDoc = await getDoc(userDocRef);
+
+          if (userDoc.exists()) {
+            const userData = userDoc.data();
+            setProfileImageUrl(userData?.profileImageUrl || null);
+          }
+        };
+
+        fetchUserProfile();
+      }
     });
 
     return () => unsubscribe();
@@ -45,6 +62,18 @@ const GetUserPhoto = ({
         height={parseInt(height) * 4}
         className={cn(className)}
       />
+    );
+  } else if (profileImageUrl) {
+    return (
+      <div className="rounded-full overflow-hidden">
+        <Image
+          alt="profile-cover"
+          src={profileImageUrl}
+          width={parseInt(width) * 4}
+          height={parseInt(height) * 4}
+          className={cn(className, "object-cover rounded-full")}
+        />
+      </div>
     );
   } else {
     return (

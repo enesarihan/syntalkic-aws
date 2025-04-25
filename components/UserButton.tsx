@@ -39,7 +39,7 @@ const UserButton = () => {
             <GetUserPhoto
               width="8"
               height="8"
-              className="relative rounded-full flex items-center justify-center"
+              className="flex items-center justify-center rounded-full object-cover size-[30px]"
             />
           </div>
         </DropdownMenuTrigger>

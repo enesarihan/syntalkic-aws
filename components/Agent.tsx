@@ -129,7 +129,7 @@ const Agent = ({
             <GetUserPhoto
               width={"540"}
               height={"540"}
-              className="flex items-center justify-center text-6xl rounded-full object-cover size-[120px]"
+              className="flex items-center justify-center rounded-full object-cover size-[120px]"
             />
             <h3>{userName}</h3>
           </div>

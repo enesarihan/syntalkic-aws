@@ -40,14 +40,14 @@ const SyntalkicCard = async ({
           variant="secondary"
           className="rounded-bl-lg rounded-tr-xl px-4 py-1.5 font-medium"
         >
-          {topic}
+          {role}
         </Badge>
       </div>
 
       <div className="p-6 pt-10 flex-grow flex flex-col justify-between">
         <div>
           <h3 className="text-xl text-center font-semibold capitalize text-foreground mb-2">
-            {role}
+            {topic}
           </h3>
 
           <div className="flex justify-center items-center gap-5 mb-2 text-muted-foreground">

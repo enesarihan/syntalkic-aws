@@ -20,6 +20,7 @@ export const updateProfileSchema = z
       .string()
       .min(8, "Password should be at least 8 character")
       .optional(),
+    profileImage: z.string().optional(),
   })
   .refine(
     (data) => {

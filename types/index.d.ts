@@ -84,19 +84,6 @@ interface SignUpParams {
 
 type FormType = "sign-in" | "sign-up";
 
-interface InterviewFormProps {
-  interviewId: string;
-  role: string;
-  level: string;
-  type: string;
-  techstack: string[];
-  amount: number;
-}
-
-interface TechIconProps {
-  techStack: string[];
-}
-
 interface LogoProps {
   className: string;
   type: "full" | "single";
