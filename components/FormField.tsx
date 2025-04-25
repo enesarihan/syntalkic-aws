@@ -23,13 +23,15 @@ const FormField = <T extends FieldValues>({
     control={control}
     name={name}
     disabled={disVal}
-    render={({ field }) => (
+    render={({ field, fieldState }) => (
       <FormItem>
         <FormLabel className="label">{label}</FormLabel>
         <FormControl>
           <Input placeholder={placeholder} {...field} type={type} />
         </FormControl>
-        <FormMessage />
+        {fieldState.error && (
+          <FormMessage>{fieldState.error.message}</FormMessage>
+        )}
       </FormItem>
     )}
   />

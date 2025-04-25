@@ -3,20 +3,24 @@ import FormField from "@/components/FormField";
 import { Button } from "@/components/ui/button";
 import { Form } from "@/components/ui/form";
 import { auth } from "@/firebase/client";
-import { updateProfile } from "@/lib/actions/user.actions";
+import { updatePasswordU, updateProfile } from "@/lib/actions/user.actions";
 import { updateProfileSchema } from "@/lib/validators";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
 
 const ProfileForm = () => {
+  const router = useRouter();
   const form = useForm<z.infer<typeof updateProfileSchema>>({
     resolver: zodResolver(updateProfileSchema),
     defaultValues: {
       name: "",
       email: "",
+      newPassword: "",
+      confirmPassword: "",
     },
   });
 
@@ -27,6 +31,7 @@ const ProfileForm = () => {
           name: user.displayName || "",
           email: user.email || "",
         };
+
         form.reset(userData);
       } else {
         toast.error("No user logged in");
@@ -42,8 +47,15 @@ const ProfileForm = () => {
         name: values.name,
       });
 
+      if (values.newPassword) {
+        const passRes = await updatePasswordU(values.newPassword);
+        if (!passRes.success) return toast.error(res.message);
+        toast.success("Password change successfully");
+      }
+
       if (!res.success) return toast.error(res.message);
-      toast.success("Profile updated successfully");
+      toast.success("Profile updated successfully,Please Sign-in Again!");
+      router.push("/sign-in");
     } catch (error) {
       console.error("Error updating profile:", error);
       toast.error("Failed to update profile");
@@ -68,6 +80,20 @@ const ProfileForm = () => {
           name="name"
           type="text"
           label="Name"
+        />
+
+        <FormField
+          control={form.control}
+          name="newPassword"
+          type="password"
+          label="New Password"
+        />
+
+        <FormField
+          control={form.control}
+          name="confirmPassword"
+          type="password"
+          label="Confirm Password"
         />
 
         <Button

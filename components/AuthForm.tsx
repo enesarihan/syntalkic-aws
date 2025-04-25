@@ -89,9 +89,54 @@ export default function AuthForm({ type }: { type: FormType }) {
         toast.success("Sign in successfully!");
         router.push("/");
       }
-    } catch (error) {
-      console.log(error);
-      toast.error(`There was an error : ${error}`);
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    } catch (error: any) {
+      console.error("Authentication error:", error);
+      let errorMessage = "An unexpected error occurred.";
+      console.log("Error Code:", error.code); // Hata kodunu doğrudan yazdırın
+
+      if (error?.code) {
+        switch (error.code?.trim()) {
+          case "auth/email-already-in-use":
+            errorMessage = "Email address is already in use.";
+            break;
+          case "auth/invalid-email":
+            errorMessage = "Invalid email address.";
+            break;
+          case "auth/weak-password":
+            errorMessage = "Password is too weak.";
+            break;
+
+          case "auth/user-not-found":
+            errorMessage = "User not found. Please check your email.";
+            break;
+          case "auth/wrong-password":
+            errorMessage = "Incorrect password. Please try again.";
+            break;
+          case "auth/too-many-requests":
+            errorMessage = "Too many attempts. Please try again later.";
+            break;
+          case "auth/user-disabled":
+            errorMessage = "This account has been disabled.";
+            break;
+
+          case "auth/popup-closed-by-user":
+            errorMessage = "Sign in popup was closed by user.";
+            break;
+          case "auth/network-request-failed":
+            errorMessage =
+              "A network error occurred. Please check your connection.";
+            break;
+          case "auth/invalid-credential":
+            errorMessage = "Invalid email or password. Please try again.";
+            break;
+          default:
+            errorMessage = `Error: ${error.message}`;
+            break;
+        }
+      }
+
+      toast.error(errorMessage);
     }
   }
 
