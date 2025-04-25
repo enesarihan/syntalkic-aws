@@ -36,8 +36,6 @@ const GetUserPhoto = ({
     (provider) => provider.providerId === "google.com"
   );
 
-  console.log(firstInitial);
-
   if (isGoogleUser && currentUser?.photoURL) {
     return (
       <Image

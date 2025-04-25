@@ -14,6 +14,7 @@ import { z } from "zod";
 
 const ProfileForm = () => {
   const router = useRouter();
+  const user = auth.currentUser;
   const form = useForm<z.infer<typeof updateProfileSchema>>({
     resolver: zodResolver(updateProfileSchema),
     defaultValues: {
@@ -50,17 +51,21 @@ const ProfileForm = () => {
       if (values.newPassword) {
         const passRes = await updatePasswordU(values.newPassword);
         if (!passRes.success) return toast.error(res.message);
-        toast.success("Password change successfully");
+        toast.success("Password changed successfully,Please Sign-in Again!");
+        router.push("/sign-in");
       }
 
       if (!res.success) return toast.error(res.message);
-      toast.success("Profile updated successfully,Please Sign-in Again!");
-      router.push("/sign-in");
+      toast.success("Profile updated successfully!");
     } catch (error) {
       console.error("Error updating profile:", error);
       toast.error("Failed to update profile");
     }
   };
+
+  const isGoogleUser = user?.providerData?.some(
+    (provider) => provider.providerId === "google.com"
+  );
 
   return (
     <Form {...form}>
@@ -81,20 +86,23 @@ const ProfileForm = () => {
           type="text"
           label="Name"
         />
+        {!isGoogleUser && (
+          <>
+            <FormField
+              control={form.control}
+              name="newPassword"
+              type="password"
+              label="New Password"
+            />
 
-        <FormField
-          control={form.control}
-          name="newPassword"
-          type="password"
-          label="New Password"
-        />
-
-        <FormField
-          control={form.control}
-          name="confirmPassword"
-          type="password"
-          label="Confirm Password"
-        />
+            <FormField
+              control={form.control}
+              name="confirmPassword"
+              type="password"
+              label="Confirm Password"
+            />
+          </>
+        )}
 
         <Button
           className="w-full"
