@@ -3,6 +3,11 @@ import { CreateAssistantDTO } from "@vapi-ai/web/dist/api";
 export const createSyntalker = (
   gender: "male" | "female"
 ): CreateAssistantDTO => {
+  if (!gender) {
+    console.error("Gender is undefined. Please provide a valid gender.");
+    return {} as CreateAssistantDTO; // Bu, hata döndüren bir fonksiyon olacaktır.
+  }
+
   return {
     name: "Syntalker",
     firstMessage:
@@ -14,7 +19,8 @@ export const createSyntalker = (
     },
     voice: {
       provider: "11labs",
-      voiceId: gender === "male" ? "josh" : "sarah",
+      voiceId:
+        gender === "male" ? "uju3wxzG5OhpWcoi3SMy" : "y3H6zY6KvCH2pEuQjmv8",
       stability: 0.4,
       similarityBoost: 0.8,
       speed: 0.9,

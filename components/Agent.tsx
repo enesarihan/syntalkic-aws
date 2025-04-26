@@ -86,7 +86,12 @@ const Agent = ({
       const formattedQuestions =
         questions?.map((q) => `- ${q}`).join("\n") || "";
 
-      await vapi.start(createSyntalker(gender || "female"), {
+      const normalizedGender =
+        gender?.toLowerCase() === "male" || gender?.toLowerCase() === "female"
+          ? (gender.toLowerCase() as "male" | "female")
+          : "female";
+
+      await vapi.start(createSyntalker(normalizedGender), {
         variableValues: {
           topic: topic || "Random Chat",
           role: role || "Friendly Stranger",

@@ -10,6 +10,14 @@ const GeneratedSyntalkic = async ({ params }: RouteParams) => {
 
   if (!syntalkic) redirect("/");
 
+  const selectedGender = ["male", "female"].includes(
+    syntalkic.gender?.toLowerCase()
+  )
+    ? (syntalkic.gender.toLowerCase() as "male" | "female")
+    : undefined;
+
+  console.log(selectedGender);
+
   return (
     <>
       <div className="flex flex-row gap-4 justify-between">
@@ -31,6 +39,7 @@ const GeneratedSyntalkic = async ({ params }: RouteParams) => {
           questions={syntalkic.questions}
           role={syntalkic.role}
           topic={syntalkic.topic}
+          gender={selectedGender}
         />
       </div>
     </>
