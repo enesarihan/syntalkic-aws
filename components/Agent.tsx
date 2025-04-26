@@ -24,11 +24,10 @@ const Agent = ({
   userName,
   userId,
   type,
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   syntalkicId,
   questions,
 }: AgentProps) => {
-  console.log(syntalkicId);
-
   const router = useRouter();
   const [isSpeaking, setIsSpeaking] = useState(false);
   const [callStatus, setCallStatus] = useState<CallStatus>(CallStatus.INACTIVE);
@@ -126,11 +125,7 @@ const Agent = ({
         </div>
         <div className="card-border">
           <div className="card-content">
-            <GetUserPhoto
-              width={"540"}
-              height={"540"}
-              className="flex items-center justify-center rounded-full object-cover size-[120px]"
-            />
+            <GetUserPhoto className="flex items-center justify-center rounded-full object-cover size-[120px]" />
             <h3>{userName}</h3>
           </div>
         </div>

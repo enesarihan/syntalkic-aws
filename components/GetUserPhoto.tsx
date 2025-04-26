@@ -1,21 +1,11 @@
 "use client";
 import { getAuth, User as GoogleUser, onAuthStateChanged } from "firebase/auth";
 import { useEffect, useState } from "react";
-import Image from "next/image";
-import { cn } from "@/lib/utils";
-import { Button } from "./ui/button";
 import { doc, getDoc } from "firebase/firestore";
-import { db } from "@/firebase/client"; // Firebase Firestore'a bağlantı
+import { db } from "@/firebase/client";
+import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 
-const GetUserPhoto = ({
-  className,
-  height,
-  width,
-}: {
-  className?: string;
-  height: string;
-  width: string;
-}) => {
+const GetUserPhoto = ({ className }: { className?: string }) => {
   const [currentUser, setCurrentUser] = useState<GoogleUser | null>(null);
   const [loading, setLoading] = useState(true);
   const [profileImageUrl, setProfileImageUrl] = useState<string | null>(null); // Firestore'dan alınacak profil fotoğrafı URL'si
@@ -55,36 +45,23 @@ const GetUserPhoto = ({
 
   if (isGoogleUser && currentUser?.photoURL) {
     return (
-      <Image
-        alt="profile-cover"
-        src={currentUser.photoURL}
-        width={parseInt(width) * 4}
-        height={parseInt(height) * 4}
-        className={cn(className)}
-      />
+      <Avatar className={className}>
+        <AvatarImage src={currentUser.photoURL} />
+        <AvatarFallback>{firstInitial}</AvatarFallback>
+      </Avatar>
     );
   } else if (profileImageUrl) {
     return (
-      <div className="rounded-full overflow-hidden">
-        <Image
-          alt="profile-cover"
-          src={profileImageUrl}
-          width={parseInt(width) * 4}
-          height={parseInt(height) * 4}
-          className={cn(className, "object-cover rounded-full")}
-        />
-      </div>
+      <Avatar className={className}>
+        <AvatarImage src={profileImageUrl} />
+        <AvatarFallback>{firstInitial}</AvatarFallback>
+      </Avatar>
     );
   } else {
     return (
-      <Button
-        className={cn(
-          `w-${width} h-${height} p-3 bg-slate-900 dark:bg-gray-200`,
-          className
-        )}
-      >
-        {firstInitial}
-      </Button>
+      <Avatar className={className}>
+        <AvatarFallback>{firstInitial}</AvatarFallback>
+      </Avatar>
     );
   }
 };

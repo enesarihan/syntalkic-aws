@@ -93,7 +93,6 @@ export default function AuthForm({ type }: { type: FormType }) {
     } catch (error: any) {
       console.error("Authentication error:", error);
       let errorMessage = "An unexpected error occurred.";
-      console.log("Error Code:", error.code); // Hata kodunu doğrudan yazdırın
 
       if (error?.code) {
         switch (error.code?.trim()) {

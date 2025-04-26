@@ -33,13 +33,11 @@ export const ourFileRouter = {
             profileImageUrl: profileImageUrl,
             updatedAt: new Date(),
           });
-          console.log("Profile Photo Updated", profileImageUrl);
         } else {
           await setDoc(userDocRef, {
             profileImageUrl: profileImageUrl,
             createdAt: new Date(),
           });
-          console.log("Profile Photo Added.");
         }
         return { uploadedBy: userId, url: profileImageUrl };
       } catch (err) {

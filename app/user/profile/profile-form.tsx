@@ -72,8 +72,6 @@ const ProfileForm = () => {
           ...userData,
           profileImage: userData.profileImage,
         });
-      } else {
-        toast.error("No user logged in");
       }
 
       return () => unsubscribe();
@@ -81,8 +79,6 @@ const ProfileForm = () => {
   }, [form]);
 
   const onSubmit = async (values: z.infer<typeof updateProfileSchema>) => {
-    console.log("OnSubmit-Values:", values);
-
     try {
       const res = await updateProfile({
         name: values.name,
@@ -160,16 +156,18 @@ const ProfileForm = () => {
                   <FormControl>
                     <UploadButton
                       endpoint={"imageUploader"}
+                      appearance={{
+                        button:
+                          "bg-gradient-to-r cursor-pointer from-indigo-500 via-purple-500 to-pink-500 text-white font-bold py-2 px-6 rounded-full shadow-xl hover:scale-105 active:scale-95 transition-transform duration-300",
+                        container:
+                          "flex flex-col items-center justify-center gap-4",
+                        allowedContent: "text-xs text-gray-300",
+                      }}
                       input={{
                         token: uploadToken as string,
                       }}
                       onClientUploadComplete={async (res) => {
-                        console.log(
-                          "Upload response:",
-                          JSON.stringify(res, null, 2)
-                        ); // Check the raw response
                         const uploadedFile = res?.[0];
-                        console.log("Uploaded file object:", uploadedFile); // Check the extracted URL
 
                         const url = uploadedFile?.url || uploadedFile?.ufsUrl;
 
@@ -179,11 +177,9 @@ const ProfileForm = () => {
                         }
 
                         setProfileImageUrl(url);
-                        console.log("setProfileImageUrl called with:", url);
                         form.setValue("profileImage", url, {
                           shouldValidate: true,
                         });
-                        console.log("form.setValue called with:", url);
                       }}
                       onUploadError={(error: Error) => {
                         toast.error(`ERROR! ${error.message}`);
