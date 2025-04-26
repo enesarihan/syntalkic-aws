@@ -18,6 +18,7 @@ interface Syntalkic {
   role: string;
   topic: string;
   questions: string[];
+  gender: string;
   createdAt: string;
   userId: string;
   finalized: boolean;
@@ -41,6 +42,7 @@ interface SyntalkicCardProps {
   userId?: string;
   role: string;
   topic: string;
+  gender: string;
   createdAt?: string;
   className?: string;
   description?: string;
@@ -54,6 +56,7 @@ interface AgentProps {
   type: "generate" | "syntalkic";
   topic?: string;
   role?: string;
+  gender: string;
   questions?: string[];
 }
 

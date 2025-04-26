@@ -31,6 +31,7 @@ const GeneratedSyntalkic = async ({ params }: RouteParams) => {
           questions={syntalkic.questions}
           role={syntalkic.role}
           topic={syntalkic.topic}
+          gender={syntalkic.gender}
         />
       </div>
     </>

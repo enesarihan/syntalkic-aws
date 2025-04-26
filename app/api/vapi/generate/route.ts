@@ -5,7 +5,7 @@ import { db } from "@/firebase/admin";
 
 export async function POST(request: Request) {
   try {
-    const { role, topic, userid, amount } = await request.json();
+    const { role, topic, userid, amount, gender } = await request.json();
 
     if (!role || !topic || !amount || !userid) {
       return new Response(
@@ -24,6 +24,7 @@ export async function POST(request: Request) {
       The user wants to engage in a conversation with someone who is a: ${role}.
       Generate questions that this person (${role}) would naturally ask, keeping them engaging and relevant to the topic.
       Ensure the questions cover a range of conversational styles, including open-ended, thought-provoking, and light-hearted inquiries.
+      The user wants to talk with ${gender} assistant.
 
       Also, include a short description (3-5 sentences) of the conversation.
       Return the result as a valid JSON object with the following structure:
@@ -76,6 +77,7 @@ export async function POST(request: Request) {
       userId: userid,
       finalized: true,
       description,
+      gender,
       createdAt: new Date().toISOString(),
     };
 
