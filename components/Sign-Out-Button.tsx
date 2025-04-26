@@ -1,56 +1,64 @@
 "use client";
-import { auth } from "@/firebase/client";
-import { signOut } from "firebase/auth";
-import { useRouter } from "next/navigation";
-import { toast } from "sonner";
-import { Button } from "./ui/button";
+
 import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
+import { signOut } from "firebase/auth";
+import { toast } from "sonner";
+import { auth } from "@/firebase/client";
 import { isAuthenticated } from "@/lib/actions/auth.actions";
+import { Button } from "./ui/button";
 
 const SignOutButton = () => {
   const router = useRouter();
-  const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
-  const [loading, setLoading] = useState<boolean>(true);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const checkAuth = async () => {
       setLoading(true);
-      const authenticated = await isAuthenticated();
-      setIsLoggedIn(authenticated);
-      setLoading(false);
+      try {
+        const authenticated = await isAuthenticated();
+        setIsLoggedIn(authenticated);
+      } catch (error) {
+        console.error("Auth check error:", error);
+      } finally {
+        setLoading(false);
+      }
     };
 
     checkAuth();
   }, []);
 
-  const handleLogout = () => {
-    signOut(auth)
-      .then(() => {
-        toast.success("Sign out Successfully!");
-        router.push("/sign-in");
-      })
-      .catch((error) => {
-        toast.error(`Error when Signing out: ${error.message}`);
-      });
+  const handleLogout = async () => {
+    try {
+      await signOut(auth);
+      await fetch("/api/logout", { method: "POST" });
+      toast.success("Signed out successfully!");
+      router.push("/sign-in");
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    } catch (error: any) {
+      console.error("Logout error:", error);
+      toast.error(`Error when signing out: ${error.message}`);
+    }
   };
 
   if (loading) {
     return (
-      <Button variant="outline" className="w-full">
+      <Button variant="outline" className="w-full" disabled>
         Loading...
       </Button>
     );
   }
 
-  if (isLoggedIn) {
-    return (
-      <Button variant="outline" onClick={handleLogout} className="w-full">
-        Sign Out
-      </Button>
-    );
-  } else {
+  if (!isLoggedIn) {
     return null;
   }
+
+  return (
+    <Button variant="outline" onClick={handleLogout} className="w-full">
+      Sign Out
+    </Button>
+  );
 };
 
 export default SignOutButton;

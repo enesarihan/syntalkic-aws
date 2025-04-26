@@ -24,7 +24,7 @@ const Profile = async () => {
             <CardDescription>Your personal details</CardDescription>
           </CardHeader>
           <CardContent className="flex flex-col items-center md:items-start space-y-6">
-            <GetUserPhoto className="h-32 w-32 rounded-full border-4 border-background shadow-md" />
+            <GetUserPhoto className="h-32 w-32 rounded-full border-4 border-background shadow-md text-6xl" />
 
             <div className="w-full space-y-4">
               <div className="space-y-3">
