@@ -13,5 +13,9 @@ export function middleware(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/", "/user/profile"],
+  matcher: [
+    "/",
+    "/user/profile",
+    "/((?!_next|api/upload|api/auth|api/logout|sign-in|sign-up|favicon.ico).*)",
+  ],
 };
