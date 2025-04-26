@@ -4,7 +4,7 @@ import { vapi } from "@/lib/vapi.sdk";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { GradientButton } from "./ui/gradient-button";
-import { syntalker } from "@/constants";
+import { createSyntalker } from "@/constants";
 import Logo from "./Logo";
 import GetUserPhoto from "./GetUserPhoto";
 
@@ -27,6 +27,7 @@ const Agent = ({
   questions,
   topic,
   role,
+  gender,
 }: AgentProps) => {
   const router = useRouter();
   const [isSpeaking, setIsSpeaking] = useState(false);
@@ -85,7 +86,7 @@ const Agent = ({
       const formattedQuestions =
         questions?.map((q) => `- ${q}`).join("\n") || "";
 
-      await vapi.start(syntalker, {
+      await vapi.start(createSyntalker(gender || "female"), {
         variableValues: {
           topic: topic || "Random Chat",
           role: role || "Friendly Stranger",
