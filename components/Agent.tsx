@@ -24,9 +24,9 @@ const Agent = ({
   userName,
   userId,
   type,
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  syntalkicId,
   questions,
+  topic,
+  role,
 }: AgentProps) => {
   const router = useRouter();
   const [isSpeaking, setIsSpeaking] = useState(false);
@@ -36,18 +36,18 @@ const Agent = ({
   useEffect(() => {
     const onCallStart = () => setCallStatus(CallStatus.ACTIVE);
     const onCallEnd = () => setCallStatus(CallStatus.FINISHED);
-
     const onMessage = (message: Message) => {
       if (message.type === "transcript" && message.transcriptType === "final") {
         const newMessage = { role: message.role, content: message.transcript };
-
         setMessages((prev) => [...prev, newMessage]);
       }
     };
     const onSpeechStart = () => setIsSpeaking(true);
     const onSpeechEnd = () => setIsSpeaking(false);
+    const onError = (error: Error) => {
+      console.error("Detailed Vapi Error:", JSON.stringify(error, null, 2));
+    };
 
-    const onError = (error: Error) => console.log("Error :", error);
     vapi.on("call-start", onCallStart);
     vapi.on("call-end", onCallEnd);
     vapi.on("message", onMessage);
@@ -67,14 +67,9 @@ const Agent = ({
 
   useEffect(() => {
     if (callStatus === CallStatus.FINISHED) {
-      if (type === "generate") {
-        router.push("/chats");
-      } else {
-        // handle generate feedback
-      }
+      router.push("/chats");
     }
-    if (callStatus === CallStatus.FINISHED) router.push("/chats");
-  }, [messages, callStatus, type, userId, router]);
+  }, [callStatus, router]);
 
   const handleCall = async () => {
     setCallStatus(CallStatus.CONNECTING);
@@ -87,16 +82,13 @@ const Agent = ({
         },
       });
     } else {
-      let formattedQuestions = "";
-
-      if (questions) {
-        formattedQuestions = questions
-          .map((question) => `-${question}`)
-          .join("\n");
-      }
+      const formattedQuestions =
+        questions?.map((q) => `- ${q}`).join("\n") || "";
 
       await vapi.start(syntalker, {
         variableValues: {
+          topic: topic || "Random Chat",
+          role: role || "Friendly Stranger",
           questions: formattedQuestions,
         },
       });
@@ -105,12 +97,11 @@ const Agent = ({
 
   const handleDisconnect = async () => {
     setCallStatus(CallStatus.FINISHED);
-
     vapi.stop();
   };
 
   const latestMessage = messages[messages.length - 1]?.content;
-  const isCallInactiveorFinished =
+  const isCallIdle =
     callStatus === CallStatus.INACTIVE || callStatus === CallStatus.FINISHED;
 
   return (
@@ -123,6 +114,7 @@ const Agent = ({
           </div>
           <h3>AI</h3>
         </div>
+
         <div className="card-border">
           <div className="card-content">
             <GetUserPhoto className="flex items-center justify-center rounded-full object-cover size-[120px]" />
@@ -131,7 +123,7 @@ const Agent = ({
         </div>
       </div>
 
-      {messages.length > 0 && (
+      {latestMessage && (
         <div className="transcript-border">
           <div className="transcript">
             <p
@@ -148,16 +140,15 @@ const Agent = ({
       )}
 
       <div className="w-full flex justify-center">
-        {callStatus !== "ACTIVE" ? (
+        {callStatus !== CallStatus.ACTIVE ? (
           <GradientButton className="relative btn-call" onClick={handleCall}>
             <span
               className={cn(
-                "absolute animatine-ping rounded-full opacity-75",
-                callStatus !== "CONNECTING" && "hidden"
+                "absolute animate-ping rounded-full opacity-75",
+                callStatus !== CallStatus.CONNECTING && "hidden"
               )}
             />
-
-            <span>{isCallInactiveorFinished ? "Call" : ". . ."}</span>
+            <span>{isCallIdle ? "Call" : ". . ."}</span>
           </GradientButton>
         ) : (
           <GradientButton className="btn-disconnect" onClick={handleDisconnect}>

@@ -52,6 +52,8 @@ interface AgentProps {
   syntalkicId?: string;
   feedbackId?: string;
   type: "generate" | "syntalkic";
+  topic?: string;
+  role?: string;
   questions?: string[];
 }
 
