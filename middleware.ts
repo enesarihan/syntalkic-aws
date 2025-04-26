@@ -4,7 +4,12 @@ import type { NextRequest } from "next/server";
 export function middleware(request: NextRequest) {
   const session = request.cookies.get("session")?.value;
 
-  if (!session && !request.nextUrl.pathname.startsWith("/sign-in")) {
+  // Eğer session yoksa ve istek sign-in dışında bir yere gitmeye çalışıyorsa
+  if (
+    !session &&
+    !request.nextUrl.pathname.startsWith("/sign-in") &&
+    request.method !== "POST"
+  ) {
     const signInUrl = new URL("/sign-in", request.url);
     return NextResponse.redirect(signInUrl);
   }
