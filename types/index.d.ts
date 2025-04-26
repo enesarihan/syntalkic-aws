@@ -56,7 +56,7 @@ interface AgentProps {
   type: "generate" | "syntalkic";
   topic?: string;
   role?: string;
-  gender: string;
+  gender?: string;
   questions?: string[];
 }
 
