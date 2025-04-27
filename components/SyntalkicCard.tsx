@@ -13,6 +13,7 @@ const SyntalkicCard = async ({
   createdAt,
   className,
   description,
+  gender,
   userId,
 }: SyntalkicCardProps) => {
   const user = await getUserById(userId ? userId : "");
@@ -40,7 +41,7 @@ const SyntalkicCard = async ({
           variant="secondary"
           className="rounded-bl-lg rounded-tr-xl px-4 py-1.5 font-medium"
         >
-          {role}
+          {role} - {gender}
         </Badge>
       </div>
 

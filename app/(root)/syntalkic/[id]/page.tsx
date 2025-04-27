@@ -26,7 +26,7 @@ const GeneratedSyntalkic = async ({ params }: RouteParams) => {
             <h3 className="capitalize">Syntalkic as {syntalkic.role}</h3>
           </div>
           <p className="bg-gray-400 dark:bg-dark-200 px-4 py-2 rounded-lg h-fit capitalize">
-            {syntalkic.topic}
+            {syntalkic.topic} - {syntalkic.gender}
           </p>
         </div>
       </div>

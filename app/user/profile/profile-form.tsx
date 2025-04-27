@@ -137,7 +137,7 @@ const ProfileForm = () => {
               control={form.control}
               name="newPassword"
               type="password"
-              label="New Password"
+              label="New Password (Optional)"
             />
 
             <FormField
@@ -174,6 +174,23 @@ const ProfileForm = () => {
                         if (!url) {
                           toast.error("Can't find the URL.");
                           return;
+                        }
+
+                        if (profileImageUrl) {
+                          const oldKey = profileImageUrl.split("/").pop();
+
+                          try {
+                            await fetch("/api/uploadthing/delete", {
+                              method: "POST",
+                              headers: {
+                                "Content-Type": "application/json",
+                              },
+                              body: JSON.stringify({ fileKey: oldKey }),
+                            });
+                            console.log("Old image deleted successfully");
+                          } catch (error) {
+                            console.error("Failed to delete old image:", error);
+                          }
                         }
 
                         setProfileImageUrl(url);
