@@ -1,7 +1,6 @@
-import { db } from "@/firebase/client";
+import { db } from "@/firebase/admin";
 import { createUploadthing, type FileRouter } from "uploadthing/next";
 import { UploadThingError } from "uploadthing/server";
-import { doc, getDoc, updateDoc, setDoc } from "firebase/firestore";
 import { getAuth } from "firebase-admin/auth";
 import { z } from "zod";
 
@@ -23,18 +22,18 @@ export const ourFileRouter = {
       const userId = metadata.userId;
       const profileImageUrl = file.ufsUrl;
 
-      const userDocRef = doc(db, "users", userId);
+      const userDocRef = db.collection("users").doc(userId); // ADMIN doğru kullanım
 
       try {
-        const docSnap = await getDoc(userDocRef);
+        const docSnap = await userDocRef.get(); // ADMIN doğru kullanım
 
-        if (docSnap.exists()) {
-          await updateDoc(userDocRef, {
+        if (docSnap.exists) {
+          await userDocRef.update({
             profileImageUrl: profileImageUrl,
             updatedAt: new Date(),
           });
         } else {
-          await setDoc(userDocRef, {
+          await userDocRef.set({
             profileImageUrl: profileImageUrl,
             createdAt: new Date(),
           });
@@ -46,4 +45,5 @@ export const ourFileRouter = {
       }
     }),
 } satisfies FileRouter;
+
 export type OurFileRouter = typeof ourFileRouter;
