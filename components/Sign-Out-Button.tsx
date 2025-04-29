@@ -2,10 +2,9 @@
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { signOut } from "firebase/auth";
+import { signOut, onAuthStateChanged } from "firebase/auth";
 import { toast } from "sonner";
 import { auth } from "@/firebase/client";
-import { isAuthenticated } from "@/lib/actions/auth.actions";
 import { Button } from "./ui/button";
 
 const SignOutButton = () => {
@@ -14,19 +13,12 @@ const SignOutButton = () => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const checkAuth = async () => {
-      setLoading(true);
-      try {
-        const authenticated = await isAuthenticated();
-        setIsLoggedIn(authenticated);
-      } catch (error) {
-        console.error("Auth check error:", error);
-      } finally {
-        setLoading(false);
-      }
-    };
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      setIsLoggedIn(!!user);
+      setLoading(false);
+    });
 
-    checkAuth();
+    return () => unsubscribe();
   }, []);
 
   const handleLogout = async () => {
