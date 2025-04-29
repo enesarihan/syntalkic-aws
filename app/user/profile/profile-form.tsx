@@ -20,12 +20,16 @@ import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
 import { doc, getDoc, updateDoc } from "firebase/firestore";
+import { Progress } from "@/components/ui/progress";
+import { CheckCircle } from "lucide-react";
 
 const ProfileForm = () => {
   const router = useRouter();
   const user = auth.currentUser;
   const [profileImageUrl, setProfileImageUrl] = useState<string | null>(null);
   const [uploadToken, setUploadToken] = useState<string | null>(null);
+  const [progress, setProgress] = useState(0);
+  const [uploadComplete, setUploadComplete] = useState(false);
 
   const form = useForm<z.infer<typeof updateProfileSchema>>({
     resolver: zodResolver(updateProfileSchema),
@@ -197,6 +201,12 @@ const ProfileForm = () => {
                         form.setValue("profileImage", url, {
                           shouldValidate: true,
                         });
+
+                        // Yükleme tamamlandığında tik simgesini göster
+                        setUploadComplete(true);
+                      }}
+                      onUploadProgress={(progress) => {
+                        setProgress(progress); // Update progress bar value
                       }}
                       onUploadError={(error: Error) => {
                         toast.error(`ERROR! ${error.message}`);
@@ -208,6 +218,20 @@ const ProfileForm = () => {
               )}
             />
           </>
+        )}
+
+        {/* Progress and CheckCircle are now outside FormControl */}
+        {progress > 0 && progress < 100 && (
+          <div className="mt-4">
+            <Progress value={progress} />
+          </div>
+        )}
+
+        {uploadComplete && (
+          <div className="flex items-center gap-2 text-green-500 mt-2">
+            <CheckCircle className="w-5 h-5" />
+            <span>Upload Complete</span>
+          </div>
         )}
 
         <Button
