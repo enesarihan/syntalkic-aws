@@ -77,15 +77,11 @@ const Agent = ({
 
     if (type === "generate") {
       await vapi.start(process.env.NEXT_PUBLIC_VAPI_WORKFLOW_ID!, {
-        variableValues: {
-          username: userName,
-          userid: userId,
-        },
+        variableValues: { username: userName, userid: userId },
       });
     } else {
       const formattedQuestions =
         questions?.map((q) => `- ${q}`).join("\n") || "";
-
       const normalizedGender =
         gender?.toLowerCase() === "male" || gender?.toLowerCase() === "female"
           ? (gender.toLowerCase() as "male" | "female")
@@ -111,58 +107,53 @@ const Agent = ({
     callStatus === CallStatus.INACTIVE || callStatus === CallStatus.FINISHED;
 
   return (
-    <>
-      <div className="call-view">
-        <div className="card-syntalker">
-          <div className="avatar">
-            <Logo type="single" className="text-8xl text-black capitalize" />
-            {isSpeaking && <span className="animate-speak"></span>}
-          </div>
-          <h3>AI</h3>
+    <div className="flex flex-col items-center space-y-6 w-full max-w-xl mx-auto mt-10 px-4">
+      {/* AI Section */}
+      <div className="flex flex-col items-center space-y-2">
+        <div className="relative flex items-center justify-center w-24 h-24 rounded-full bg-gray-100 text-black text-6xl">
+          <Logo type="single" className="" />
+          {isSpeaking && (
+            <span className="absolute bottom-0 w-3 h-3 bg-green-400 rounded-full animate-pulse" />
+          )}
         </div>
-
-        <div className="card-border">
-          <div className="card-content">
-            <GetUserPhoto className="flex items-center justify-center rounded-full object-cover size-[120px]" />
-            <h3>{userName}</h3>
-          </div>
-        </div>
+        <h3 className="text-lg font-semibold">AI</h3>
       </div>
 
+      {/* User Section */}
+      <div className="flex flex-col items-center space-y-2 border p-4 rounded-xl shadow-md w-full bg-white dark:bg-dark-100">
+        <GetUserPhoto className="w-24 h-24 rounded-full object-cover" />
+        <h3 className="text-xl font-medium dark:text-white">{userName}</h3>
+      </div>
+
+      {/* Message Preview */}
       {latestMessage && (
-        <div className="transcript-border">
-          <div className="transcript">
-            <p
-              key={latestMessage}
-              className={cn(
-                "transition-opacity duration-500 opacity-0",
-                "animate-fadeIn opacity-100"
-              )}
-            >
-              {latestMessage}
-            </p>
-          </div>
+        <div className="w-full p-4 rounded-lg bg-gray-100 shadow-inner animate-fadeIn">
+          <p className="text-center text-sm text-gray-800">{latestMessage}</p>
         </div>
       )}
 
+      {/* Call Controls */}
       <div className="w-full flex justify-center">
         {callStatus !== CallStatus.ACTIVE ? (
-          <GradientButton className="relative btn-call" onClick={handleCall}>
+          <GradientButton className="relative px-6 py-2" onClick={handleCall}>
             <span
               className={cn(
-                "absolute animate-ping rounded-full opacity-75",
+                "absolute left-0 right-0 mx-auto top-0 h-full w-full rounded-full animate-ping opacity-50",
                 callStatus !== CallStatus.CONNECTING && "hidden"
               )}
             />
             <span>{isCallIdle ? "Call" : ". . ."}</span>
           </GradientButton>
         ) : (
-          <GradientButton className="btn-disconnect" onClick={handleDisconnect}>
+          <GradientButton
+            className="px-6 py-2 bg-red-500 hover:bg-red-600"
+            onClick={handleDisconnect}
+          >
             End
           </GradientButton>
         )}
       </div>
-    </>
+    </div>
   );
 };
 

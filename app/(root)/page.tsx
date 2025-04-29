@@ -35,7 +35,7 @@ const Home: React.FC = () => {
               <div className="space-y-2">
                 <h1 className="text-3xl text-shadow-lg text-white font-bold tracking-tighter sm:text-4xl md:text-5xl lg:text-6xl/none">
                   Chat with Artificial Intelligence about{" "}
-                  <span className="block text-sky-400">
+                  <span className="block text-[#ffe45e] ">
                     <AnimatedTextCycle
                       words={[
                         "Technology",

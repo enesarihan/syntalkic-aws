@@ -19,22 +19,30 @@ const ChatPages = async () => {
   const hasUpcomingSyntalkics = (latestSyntalkics?.length ?? 0) > 0;
   return (
     <>
-      <section className="card-cta">
+      <section className="flex flex-col md:flex-row items-center justify-between gap-10 p-6 bg-muted rounded-2xl shadow-md">
         <div className="flex flex-col gap-6 max-w-lg">
-          <h2>Get Your Syntalkic Ready with AI-Powered Chat</h2>
-          <p className="text-lg">
-            Ask your questions, get information, and request assistance.
+          <h2 className="text-2xl font-bold leading-tight">
+            Get Your Syntalkic Ready with AI-Powered Chat
+          </h2>
+          <p className="text-lg text-muted-foreground">
+            Choose a topic and role, generate your personalized chat, and dive
+            into a real-time conversation with AI tailored just for you.
           </p>
-          <GradientButton variant={"variant"} asChild className="max-sm:w-full">
-            <Link href={"/syntalkic"}>Generate an Syntalkic</Link>
+
+          <GradientButton
+            variant="default"
+            asChild
+            className="w-full sm:w-auto"
+          >
+            <Link href={"/syntalkic"}>Generate a Syntalkic</Link>
           </GradientButton>
         </div>
         <Image
           alt="robo"
-          className="hidden ml-16 rounded-xl md:block mask-b-from-3.5"
+          className="hidden md:block ml-4 rounded-4xl"
           src={"/robot-girl.png"}
-          width={200}
-          height={200}
+          width={250}
+          height={250}
         />
       </section>
       <section className="flex flex-col gap-6 mt-8">

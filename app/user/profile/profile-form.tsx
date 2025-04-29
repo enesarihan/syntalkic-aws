@@ -162,7 +162,7 @@ const ProfileForm = () => {
                       endpoint={"imageUploader"}
                       appearance={{
                         button:
-                          "bg-gradient-to-r cursor-pointer from-indigo-500 via-purple-500 to-pink-500 text-white font-bold py-2 px-6 rounded-full shadow-xl hover:scale-105 active:scale-95 transition-transform duration-300",
+                          "dark:text-black dark:bg-white text-white bg-black font-bold py-2 px-6 rounded-full shadow-xl hover:scale-105 active:scale-95 transition-transform duration-300",
                         container:
                           "flex flex-col items-center justify-center gap-4",
                         allowedContent: "text-xs text-gray-300",
@@ -202,11 +202,10 @@ const ProfileForm = () => {
                           shouldValidate: true,
                         });
 
-                        // Yükleme tamamlandığında tik simgesini göster
                         setUploadComplete(true);
                       }}
                       onUploadProgress={(progress) => {
-                        setProgress(progress); // Update progress bar value
+                        setProgress(progress);
                       }}
                       onUploadError={(error: Error) => {
                         toast.error(`ERROR! ${error.message}`);
@@ -220,7 +219,6 @@ const ProfileForm = () => {
           </>
         )}
 
-        {/* Progress and CheckCircle are now outside FormControl */}
         {progress > 0 && progress < 100 && (
           <div className="mt-4">
             <Progress value={progress} />

@@ -27,9 +27,11 @@ import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import Logo from "./Logo";
 import { authFormSchema } from "@/lib/validators";
+import { useEffect, useState } from "react";
 
 export default function AuthForm({ type }: { type: FormType }) {
   const router = useRouter();
+  const [open, setOpen] = useState<boolean>(false);
   const formSchema = authFormSchema(type);
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -39,6 +41,14 @@ export default function AuthForm({ type }: { type: FormType }) {
       password: "",
     },
   });
+
+  useEffect(() => {
+    const shouldOpen = sessionStorage.getItem("open-auth-dialog");
+    if (shouldOpen === "true") {
+      setOpen(true);
+      sessionStorage.removeItem("open-auth-dialog");
+    }
+  }, []);
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
     try {
@@ -164,7 +174,7 @@ export default function AuthForm({ type }: { type: FormType }) {
   const isSignIn = type === "sign-in";
 
   return (
-    <Dialog>
+    <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
         <Button variant="outline" size={"lg"}>
           {isSignIn ? "Sign in" : "Sign Up"}
@@ -248,6 +258,9 @@ export default function AuthForm({ type }: { type: FormType }) {
           <Link
             href={isSignIn ? "/sign-up" : "/sign-in"}
             className="font-bold ml-1"
+            onClick={() => {
+              sessionStorage.setItem("open-auth-dialog", "true");
+            }}
           >
             {!isSignIn ? "Sign in " : "Sign Up"}
           </Link>
