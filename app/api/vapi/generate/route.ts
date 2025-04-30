@@ -2,6 +2,7 @@
 import { generateText } from "ai";
 import { google } from "@ai-sdk/google";
 import { db } from "@/firebase/admin";
+import { Timestamp } from "firebase-admin/firestore";
 
 export async function POST(request: Request) {
   try {
@@ -78,7 +79,7 @@ export async function POST(request: Request) {
       finalized: true,
       description,
       gender,
-      createdAt: new Date().toISOString(),
+      createdAt: Timestamp.fromDate(new Date()),
     };
 
     try {
