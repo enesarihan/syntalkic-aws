@@ -19,7 +19,7 @@ interface Syntalkic {
   topic: string;
   questions: string[];
   gender: string;
-  createdAt: string;
+  createdAt: FirebaseFirestore.Timestamp;
   userId: string;
   finalized: boolean;
 }
@@ -43,7 +43,7 @@ interface SyntalkicCardProps {
   role: string;
   topic: string;
   gender: string;
-  createdAt?: string;
+  createdAt?: FirebaseFirestore.Timestamp;
   className?: string;
   description?: string;
 }

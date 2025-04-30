@@ -1,4 +1,3 @@
-import dayjs from "dayjs";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
 import { Badge } from "./ui/badge";
@@ -6,6 +5,7 @@ import { CalendarIcon } from "lucide-react";
 import { GradientButton } from "./ui/gradient-button";
 import { getUserById } from "@/lib/actions/general.action";
 
+// SyntalkicCard bileşeni
 const SyntalkicCard = async ({
   id,
   role,
@@ -17,7 +17,22 @@ const SyntalkicCard = async ({
   userId,
 }: SyntalkicCardProps) => {
   const user = await getUserById(userId ? userId : "");
-  const formattedDate = dayjs(createdAt || Date.now()).format("MMM D , YYYY");
+
+  let dateObj: Date;
+
+  if (createdAt && typeof createdAt.toDate === "function") {
+    dateObj = createdAt.toDate();
+  } else if (createdAt instanceof Date) {
+    dateObj = createdAt;
+  } else if (typeof createdAt === "number" || typeof createdAt === "string") {
+    dateObj = new Date(createdAt);
+  } else {
+    dateObj = new Date();
+  }
+
+  const formattedDate = `${dateObj.toLocaleString("en-US", {
+    month: "short",
+  })} ${dateObj.getDate()}, ${dateObj.getFullYear()}`;
 
   if (!user) {
     return (
@@ -39,7 +54,7 @@ const SyntalkicCard = async ({
       <div className="absolute top-0 right-0">
         <Badge
           variant="secondary"
-          className="rounded-bl-lg rounded-tr-xl px-4 py-1.5 font-medium"
+          className="rounded-bl-lg rounded-tr-xl px-4 py-1.5 font-medium capitalize"
         >
           {role} - {gender}
         </Badge>
