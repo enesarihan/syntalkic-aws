@@ -3,51 +3,34 @@
 import { db } from "@/firebase/admin";
 
 export async function getSyntalkicByUserId(
-  userId: string,
-  limit = 30,
-  lastCreatedAt?: FirebaseFirestore.Timestamp
-): Promise<Syntalkic[]> {
-  let query = db
+  userId: string
+): Promise<Syntalkic[] | null> {
+  const syntalkics = await db
     .collection("syntalkics")
     .where("userId", "==", userId)
     .orderBy("createdAt", "desc")
-    .limit(limit);
+    .get();
 
-  if (lastCreatedAt) {
-    query = query.startAfter(lastCreatedAt);
-  }
-
-  const snapshot = await query.get();
-
-  return snapshot.docs.map((doc) => ({
+  return syntalkics.docs.map((doc) => ({
     id: doc.id,
     ...doc.data(),
   })) as Syntalkic[];
 }
 
-export async function getLatestSyntalkics({
-  userId,
-  limit = 30,
-  lastCreatedAt,
-}: {
-  userId: string;
-  limit?: number;
-  lastCreatedAt?: FirebaseFirestore.Timestamp;
-}): Promise<Syntalkic[]> {
-  let query = db
+export async function getLatestSyntalkics(
+  params: GetLatestSyntalkicsParams
+): Promise<Syntalkic[] | null> {
+  const { userId, limit = 20 } = params;
+
+  const syntalkics = await db
     .collection("syntalkics")
+    .orderBy("createdAt", "desc")
     .where("finalized", "==", true)
     .where("userId", "!=", userId)
-    .orderBy("createdAt", "desc")
-    .limit(limit);
+    .limit(limit)
+    .get();
 
-  if (lastCreatedAt) {
-    query = query.startAfter(lastCreatedAt);
-  }
-
-  const snapshot = await query.get();
-
-  return snapshot.docs.map((doc) => ({
+  return syntalkics.docs.map((doc) => ({
     id: doc.id,
     ...doc.data(),
   })) as Syntalkic[];
