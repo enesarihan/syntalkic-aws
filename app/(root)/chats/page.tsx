@@ -39,10 +39,10 @@ const ChatPages = async () => {
         </div>
         <Image
           alt="robo"
-          className="hidden md:block ml-4 rounded-4xl"
-          src={"/robot-girl.png"}
+          className="hidden md:block mask-b-from-2 ml-4 rounded-4xl"
+          src={"/robot-enes.png"}
           width={250}
-          height={250}
+          height={50}
         />
       </section>
       <section className="flex flex-col gap-6 mt-8">

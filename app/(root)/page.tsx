@@ -21,7 +21,7 @@ const Home: React.FC = () => {
           <div className="absolute inset-0 z-0">
             {" "}
             <Image
-              src={"/hero-image.jpg"}
+              src={"/hero-image-f.png"}
               alt="hero image"
               layout="fill"
               objectFit="cover"

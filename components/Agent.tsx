@@ -121,7 +121,7 @@ const Agent = ({
 
       {/* User Section */}
       <div className="flex flex-col items-center space-y-2 border p-4 rounded-xl shadow-md w-full bg-white dark:bg-dark-100">
-        <GetUserPhoto className="w-24 h-24 rounded-full object-cover" />
+        <GetUserPhoto className="w-24 h-24 text-5xl rounded-full object-cover" />
         <h3 className="text-xl font-medium dark:text-white">{userName}</h3>
       </div>
 
