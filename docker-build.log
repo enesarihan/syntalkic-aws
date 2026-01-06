@@ -1,0 +1,136 @@
+#0 building with "desktop-linux" instance using docker driver
+
+#1 [internal] load build definition from Dockerfile
+#1 transferring dockerfile: 1.82kB 0.0s done
+#1 DONE 0.1s
+
+#2 [internal] load metadata for docker.io/library/node:20-alpine
+#2 ...
+
+#3 [auth] library/node:pull token for registry-1.docker.io
+#3 DONE 0.0s
+
+#2 [internal] load metadata for docker.io/library/node:20-alpine
+#2 DONE 1.4s
+
+#4 [internal] load .dockerignore
+#4 transferring context: 353B done
+#4 DONE 0.0s
+
+#5 [internal] load build context
+#5 DONE 0.0s
+
+#6 [base 1/1] FROM docker.io/library/node:20-alpine@sha256:658d0f63e501824d6c23e06d4bb95c71e7d704537c9d9272f488ac03a370d448
+#6 resolve docker.io/library/node:20-alpine@sha256:658d0f63e501824d6c23e06d4bb95c71e7d704537c9d9272f488ac03a370d448 0.1s done
+#6 DONE 0.1s
+
+#7 [runner 2/6] RUN addgroup --system --gid 1001 nodejs
+#7 CACHED
+
+#8 [builder 1/4] WORKDIR /app
+#8 CACHED
+
+#9 [runner 3/6] RUN adduser --system --uid 1001 nextjs
+#9 CACHED
+
+#5 [internal] load build context
+#5 transferring context: 34.61kB 0.0s done
+#5 DONE 0.0s
+
+#10 [deps 4/4] RUN npm ci
+#10 CACHED
+
+#11 [deps 2/4] WORKDIR /app
+#11 CACHED
+
+#12 [deps 1/4] RUN apk add --no-cache libc6-compat
+#12 CACHED
+
+#13 [deps 3/4] COPY package.json package-lock.json* ./
+#13 CACHED
+
+#14 [builder 2/4] COPY --from=deps /app/node_modules ./node_modules
+#14 CACHED
+
+#15 [builder 3/4] COPY . .
+#15 DONE 0.4s
+
+#16 [builder 4/4] RUN npm run build
+#16 1.547 
+#16 1.547 > syntalkic@0.1.0 build
+#16 1.547 > next build
+#16 1.547 
+#16 3.470    ▲ Next.js 15.2.4
+#16 3.471 
+#16 3.525    Creating an optimized production build ...
+#16 77.77 Client network socket disconnected before secure TLS connection was established
+#16 77.77 
+#16 77.77 Retrying 1/3...
+#16 77.78 Client network socket disconnected before secure TLS connection was established
+#16 77.78 
+#16 77.78 Retrying 1/3...
+#16 77.78 Client network socket disconnected before secure TLS connection was established
+#16 77.78 
+#16 77.78 Retrying 1/3...
+#16 77.78 Client network socket disconnected before secure TLS connection was established
+#16 77.78 
+#16 77.78 Retrying 1/3...
+#16 77.79 Client network socket disconnected before secure TLS connection was established
+#16 77.79 
+#16 77.79 Retrying 1/3...
+#16 77.79 Client network socket disconnected before secure TLS connection was established
+#16 77.79 
+#16 77.79 Retrying 1/3...
+#16 94.43  ✓ Compiled successfully
+#16 94.43    Linting and checking validity of types ...
+#16 110.6    Collecting page data ...
+#16 119.4    Generating static pages (0/14) ...
+#16 121.7 Error occurred prerendering page "/". Read more: https://nextjs.org/docs/messages/prerender-error
+#16 121.7 FirebaseError: Firebase: Error (auth/invalid-api-key).
+#16 121.7     at v (/app/.next/server/chunks/849.js:1:60517)
+#16 121.7     at b (/app/.next/server/chunks/849.js:1:60565)
+#16 121.7     at i.instanceFactory (/app/.next/server/chunks/849.js:1:117952)
+#16 121.7     at a.getOrInitializeService (/app/.next/server/chunks/849.js:1:240027)
+#16 121.7     at a.initialize (/app/.next/server/chunks/849.js:1:239402)
+#16 121.7     at eV (/app/.next/server/chunks/849.js:1:99911)
+#16 121.7     at tq (/app/.next/server/chunks/849.js:1:118621)
+#16 121.7     at 82897 (/app/.next/server/app/(root)/page.js:1:11875)
+#16 121.7     at t (/app/.next/server/webpack-runtime.js:1:128)
+#16 121.7     at 20886 (/app/.next/server/chunks/783.js:1:206)
+#16 121.7 Export encountered an error on /(root)/page: /, exiting the build.
+#16 121.7  ⨯ Next.js build worker exited with code: 1 and signal: null
+#16 121.8 npm notice
+#16 121.8 npm notice New major version of npm available! 10.8.2 -> 11.7.0
+#16 121.8 npm notice Changelog: https://github.com/npm/cli/releases/tag/v11.7.0
+#16 121.8 npm notice To update run: npm install -g npm@11.7.0
+#16 121.8 npm notice
+#16 ERROR: process "/bin/sh -c npm run build" did not complete successfully: exit code: 1
+------
+ > [builder 4/4] RUN npm run build:
+121.7     at 82897 (/app/.next/server/app/(root)/page.js:1:11875)
+121.7     at t (/app/.next/server/webpack-runtime.js:1:128)
+121.7     at 20886 (/app/.next/server/chunks/783.js:1:206)
+121.7 Export encountered an error on /(root)/page: /, exiting the build.
+121.7  ⨯ Next.js build worker exited with code: 1 and signal: null
+121.8 npm notice
+121.8 npm notice New major version of npm available! 10.8.2 -> 11.7.0
+121.8 npm notice Changelog: https://github.com/npm/cli/releases/tag/v11.7.0
+121.8 npm notice To update run: npm install -g npm@11.7.0
+121.8 npm notice
+------
+
+ [33m5 warnings found (use docker --debug to expand):
+[0m - SecretsUsedInArgOrEnv: Do not use ARG or ENV instructions for sensitive data (ENV "FIREBASE_PRIVATE_KEY") (line 32)
+ - LegacyKeyValueFormat: "ENV key=value" should be used instead of legacy "ENV key value" format (line 41)
+ - LegacyKeyValueFormat: "ENV key=value" should be used instead of legacy "ENV key value" format (line 42)
+ - LegacyKeyValueFormat: "ENV key=value" should be used instead of legacy "ENV key value" format (line 59)
+ - LegacyKeyValueFormat: "ENV key=value" should be used instead of legacy "ENV key value" format (line 60)
+Dockerfile:35
+--------------------
+  33 |     
+  34 |     # Uygulamayı build et
+  35 | >>> RUN npm run build
+  36 |     
+  37 |     # Production image
+--------------------
+ERROR: failed to build: failed to solve: process "/bin/sh -c npm run build" did not complete successfully: exit code: 1

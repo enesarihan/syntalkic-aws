@@ -13,7 +13,22 @@ const firebaseConfig = {
 };
 
 // Initialize Firebase
-const app = !getApps.length ? initializeApp(firebaseConfig) : getApp();
+// Build-time'da dummy değerlerle initialize et (hata vermemesi için)
+// Runtime'da gerçek değerler kullanılacak
+let app;
+try {
+  app = !getApps.length ? initializeApp(firebaseConfig) : getApp();
+} catch (error) {
+  // Build-time'da hata olursa yok say
+  if (process.env.NEXT_PUBLIC_FIREBASE_API_KEY === "dummy-build-time-api-key") {
+    // Dummy değerlerle minimal init
+    app = !getApps.length 
+      ? initializeApp({ projectId: "dummy-build-time" })
+      : getApp();
+  } else {
+    throw error;
+  }
+}
 
 export const auth = getAuth(app);
 export const db = getFirestore(app);
