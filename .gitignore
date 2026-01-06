@@ -42,3 +42,10 @@ next-env.d.ts
 
 .vscode
 oldRoute.txt
+
+# AWS öğretici dosyaları (dokümantasyon)
+AWS_DEPLOYMENT_REHBERI.md
+AWS_TEMEL_BILGILER.md
+AWS_IAM_REHBERI.md
+DEPLOYMENT_CHECKLIST.md
+GITHUB_REPO_OLUSTURMA.md

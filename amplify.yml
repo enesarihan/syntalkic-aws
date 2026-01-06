@@ -1,0 +1,28 @@
+# AWS Amplify Build Configuration
+# Bu dosya AWS Amplify'in projenizi nasıl build edeceğini belirler
+
+version: 1
+frontend:
+  phases:
+    preBuild:
+      commands:
+        # Node.js versiyonunu ayarla
+        - nvm use 20
+        # Bağımlılıkları yükle
+        - npm ci
+    build:
+      commands:
+        # Next.js uygulamasını build et
+        - npm run build
+  artifacts:
+    # Build çıktısını belirle
+    baseDirectory: .next
+    files:
+      - '**/*'
+  cache:
+    paths:
+      # Build hızını artırmak için cache
+      - node_modules/**/*
+      - .next/cache/**/*
+
+

@@ -1,6 +1,8 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
+  // Docker için standalone output (daha küçük image boyutu)
+  output: "standalone",
   images: {
     remotePatterns: [
       {

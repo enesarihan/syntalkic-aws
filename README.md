@@ -1,36 +1,104 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Syntalkic - AI Asistan Uygulaması
 
-## Getting Started
+Bu proje [Next.js](https://nextjs.org) 15 ve Firebase kullanılarak geliştirilmiş bir AI asistan uygulamasıdır.
 
-First, run the development server:
+## 🚀 Hızlı Başlangıç
 
+### Gereksinimler
+
+- Node.js 20+
+- npm veya yarn
+- Firebase hesabı
+- AWS hesabı (deployment için)
+
+### Yerel Kurulum
+
+1. Bağımlılıkları yükleyin:
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+npm install
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+2. Environment variables dosyası oluşturun:
+```bash
+# .env.local dosyası oluşturun ve aşağıdaki değişkenleri ekleyin
+```
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+Gerekli environment variables:
+- `NEXT_PUBLIC_FIREBASE_API_KEY`
+- `NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN`
+- `NEXT_PUBLIC_FIREBASE_PROJECT_ID`
+- `NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET`
+- `NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID`
+- `NEXT_PUBLIC_FIREBASE_APP_ID`
+- `NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID`
+- `FIREBASE_PROJECT_ID`
+- `FIREBASE_CLIENT_EMAIL`
+- `FIREBASE_PRIVATE_KEY`
+- `NEXT_PUBLIC_VAPI_WEB_TOKEN`
+- `UPLOADTHING_SECRET`
+- `UPLOADTHING_APP_ID`
+- `GOOGLE_GENERATIVE_AI_API_KEY`
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+3. Development server'ı başlatın:
+```bash
+npm run dev
+```
 
-## Learn More
+4. Tarayıcıda açın: [http://localhost:3000](http://localhost:3000)
 
-To learn more about Next.js, take a look at the following resources:
+## 📦 Build ve Production
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+### Production Build
+```bash
+npm run build
+npm start
+```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+### Docker ile Çalıştırma
+```bash
+# Docker image oluştur
+docker build -t syntalkic:latest .
 
-## Deploy on Vercel
+# Container'ı çalıştır
+docker run -p 3000:3000 --env-file .env.local syntalkic:latest
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+# Docker Compose ile (tüm servisler için)
+docker-compose up
+```
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## ☁️ AWS'e Deployment
+
+Bu proje AWS'ye deploy edilmek için hazırlanmıştır. Detaylı rehber için:
+
+- **[AWS Deployment Rehberi](./AWS_DEPLOYMENT_REHBERI.md)** - Adım adım deployment talimatları
+- **[AWS Temel Bilgiler](./AWS_TEMEL_BILGILER.md)** - AWS'i sıfırdan öğrenme rehberi
+
+### Hızlı Deployment (AWS Amplify)
+
+1. Projeyi GitHub'a yükleyin
+2. AWS Amplify Console'a gidin
+3. "New app" > "Host web app" seçin
+4. GitHub repository'nizi bağlayın
+5. Environment variables'ları ekleyin
+6. Deploy edin!
+
+Detaylar için [AWS_DEPLOYMENT_REHBERI.md](./AWS_DEPLOYMENT_REHBERI.md) dosyasına bakın.
+
+## 🛠️ Teknolojiler
+
+- **Framework**: Next.js 15
+- **UI**: React 19, Tailwind CSS, Radix UI
+- **Backend**: Firebase (Auth, Firestore)
+- **AI**: Google Generative AI, VAPI
+- **File Upload**: UploadThing
+- **Deployment**: AWS Amplify / Docker + EC2
+
+## 📚 Dokümantasyon
+
+- [Next.js Documentation](https://nextjs.org/docs)
+- [Firebase Documentation](https://firebase.google.com/docs)
+- [AWS Documentation](https://docs.aws.amazon.com/)
+
+## 📝 Lisans
+
+Bu proje özel bir projedir.
