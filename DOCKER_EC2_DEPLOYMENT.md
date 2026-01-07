@@ -30,6 +30,7 @@ docker-compose --version
 ```
 
 **Eğer Docker kurulu değilse:**
+
 - Windows: [Docker Desktop](https://www.docker.com/products/docker-desktop/) indirin ve kurun
 - Kurulumdan sonra bilgisayarı yeniden başlatın
 
@@ -44,6 +45,7 @@ docker build -t syntalkic:latest .
 ```
 
 **Ne yapıyoruz?**
+
 - `-t syntalkic:latest`: Image'a bir isim veriyoruz (tag)
 - `.`: Mevcut klasörü Docker context olarak kullanıyoruz
 
@@ -59,11 +61,13 @@ docker run -p 3000:3000 \
 ```
 
 **Ne yapıyoruz?**
+
 - `-p 3000:3000`: Host'un 3000 portunu container'ın 3000 portuna bağlıyoruz
 - `--env-file .env.local`: Environment variable'ları dosyadan yüklüyoruz
 - `syntalkic:latest`: Build ettiğimiz image'ı kullanıyoruz
 
 **Test:**
+
 - Tarayıcıda `http://localhost:3000` adresine gidin
 - Uygulama çalışıyorsa başarılı! ✅
 - Durdurmak için: `Ctrl+C`
@@ -100,18 +104,22 @@ docker-compose down
 ### 2.3 Instance Ayarları
 
 #### Name and tags
+
 - **Name**: `syntalkic-server`
 
 #### Application and OS Images (AMI)
+
 - **Amazon Linux**: **Amazon Linux 2023 AMI** seçin (ücretsiz tier)
 - Veya **Ubuntu Server 22.04 LTS** (popüler seçenek)
 
 #### Instance type
+
 - **t2.micro** seçin (Free Tier - ücretsiz)
   - 1 vCPU, 1 GB RAM
   - Küçük uygulamalar için yeterli
 
 #### Key pair (login)
+
 - **"Create new key pair"** tıklayın
 - **Key pair name**: `syntalkic-key`
 - **Key pair type**: RSA
@@ -120,20 +128,25 @@ docker-compose down
 - **⚠️ ÖNEMLİ**: İndirilen `.pem` dosyasını güvenli bir yere kaydedin!
 
 #### Network settings
+
 - **"Edit"** butonuna tıklayın
 - **Security group name**: `syntalkic-sg`
 - **Description**: `Security group for Syntalkic application`
 
 **Inbound security group rules ekleyin:**
+
 1. **SSH** (22):
+
    - Type: SSH
    - Source: My IP (otomatik) veya 0.0.0.0/0 (her yerden - güvensiz ama test için)
 
 2. **HTTP** (80):
+
    - Type: HTTP
    - Source: 0.0.0.0/0
 
 3. **HTTPS** (443):
+
    - Type: HTTPS
    - Source: 0.0.0.0/0
 
@@ -143,6 +156,7 @@ docker-compose down
    - Source: 0.0.0.0/0
 
 #### Configure storage
+
 - **Size**: 8 GB (Free Tier limiti)
 - **Volume type**: gp3 (varsayılan)
 
@@ -180,22 +194,26 @@ ssh -i "syntalkic-key.pem" ec2-user@EC2-IP-ADRESI
 ssh -i "syntalkic-key.pem" ec2-user@54.123.45.67
 ```
 
-**Not:** 
+**Not:**
+
 - Amazon Linux için kullanıcı: `ec2-user`
 - Ubuntu için kullanıcı: `ubuntu`
 
 #### İlk Bağlantıda
 
 İlk kez bağlanırken şu mesajı göreceksiniz:
+
 ```
 The authenticity of host '54.123.45.67' can't be established.
 Are you sure you want to continue connecting (yes/no)?
 ```
+
 **`yes`** yazın ve Enter'a basın.
 
 #### Bağlantı Başarılı!
 
 Bağlantı başarılı olduğunda şu şekilde bir prompt göreceksiniz:
+
 ```
 [ec2-user@ip-172-31-xx-xx ~]$
 ```
@@ -238,6 +256,7 @@ exit
 ```
 
 **Tekrar bağlan:**
+
 ```bash
 ssh -i "syntalkic-key.pem" ec2-user@EC2-IP-ADRESI
 ```
@@ -259,7 +278,7 @@ sudo docker ps
 
 ```bash
 # Docker Compose'u indir
-sudo curl -L "https://github.com/docker/compose/releases/latest/download/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+
 
 # Çalıştırılabilir yap
 sudo chmod +x /usr/local/bin/docker-compose
@@ -384,6 +403,7 @@ GOOGLE_GENERATIVE_AI_API_KEY=your-google-ai-key
 ```
 
 **Nano Editör Kullanımı:**
+
 - Dosyayı kaydetmek: `Ctrl+O`, Enter, `Ctrl+X`
 - Çıkmak: `Ctrl+X`
 
@@ -418,6 +438,7 @@ docker build -t syntalkic:latest .
 ```
 
 **Ne oluyor?**
+
 - Docker, Dockerfile'daki talimatları takip ederek image oluşturuyor
 - Tüm bağımlılıklar indiriliyor
 - Next.js uygulaması build ediliyor
@@ -435,6 +456,7 @@ docker run -d \
 ```
 
 **Ne yapıyoruz?**
+
 - `-d`: Detached mode (arka planda çalıştır)
 - `--name syntalkic-app`: Container'a isim ver
 - `-p 3000:3000`: Port mapping (host:container)
@@ -456,6 +478,7 @@ docker logs -f syntalkic-app
 ```
 
 **Başarılı çıktı örneği:**
+
 ```
 - ready started server on 0.0.0.0:3000
 ```
@@ -466,6 +489,7 @@ docker logs -f syntalkic-app
 2. Uygulama yükleniyorsa başarılı! ✅
 
 **Eğer erişemiyorsanız:**
+
 - Security Group'da port 3000'in açık olduğundan emin olun
 - Container loglarını kontrol edin: `docker logs syntalkic-app`
 
@@ -673,6 +697,7 @@ docker run -d \
 ### Problem: "Cannot connect to Docker daemon"
 
 **Çözüm:**
+
 ```bash
 sudo service docker start
 sudo usermod -a -G docker ec2-user
@@ -682,6 +707,7 @@ sudo usermod -a -G docker ec2-user
 ### Problem: "Port 3000 already in use"
 
 **Çözüm:**
+
 ```bash
 # Hangi process kullanıyor kontrol et
 sudo lsof -i :3000
@@ -693,6 +719,7 @@ docker stop syntalkic-app
 ### Problem: "Permission denied" hatası
 
 **Çözüm:**
+
 ```bash
 # Dosya izinlerini kontrol et
 ls -la .env.production
@@ -704,6 +731,7 @@ chmod 600 .env.production
 ### Problem: Uygulama çalışmıyor
 
 **Çözüm:**
+
 ```bash
 # Logları kontrol et
 docker logs syntalkic-app
@@ -720,4 +748,3 @@ docker exec syntalkic-app env
 **🎉 Tebrikler! Deployment tamamlandı!**
 
 Artık uygulamanız AWS EC2'de çalışıyor. Sorularınız varsa çekinmeyin!
-

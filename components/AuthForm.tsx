@@ -157,17 +157,21 @@ export default function AuthForm({ type }: { type: FormType }) {
 
       const response = await signInWithGoogle(idToken);
 
-      if (!response) {
-        return {
-          success: false,
-          message: "Failed with signing Google.",
-        };
+      if (!response || !response.success) {
+        toast.error(response?.message || "Failed with signing Google.");
+        return;
       }
 
       toast.success("Sign in successfully!");
-      router.push("/");
+      
+      // Cookie set edilmesi için kısa bir bekleme
+      await new Promise((resolve) => setTimeout(resolve, 500));
+      
+      // window.location kullan (router.push yerine - daha güvenilir)
+      window.location.href = "/";
     } catch (error) {
       console.error("Failed to Sign in with Google:", error);
+      toast.error("Failed to sign in with Google. Please try again.");
     }
   };
 

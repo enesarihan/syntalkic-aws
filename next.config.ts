@@ -22,6 +22,20 @@ const nextConfig: NextConfig = {
       },
     ],
   },
+  // COOP header'ını ayarla (Firebase Auth popup için)
+  async headers() {
+    return [
+      {
+        source: "/:path*",
+        headers: [
+          {
+            key: "Cross-Origin-Opener-Policy",
+            value: "same-origin-allow-popups",
+          },
+        ],
+      },
+    ];
+  },
 };
 
 export default nextConfig;
