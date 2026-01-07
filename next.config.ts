@@ -22,19 +22,25 @@ const nextConfig: NextConfig = {
       },
     ],
   },
-  // COOP header'ını ayarla (Firebase Auth popup için)
+  // COOP header'ını ayarla (sadece HTTPS veya localhost için)
+  // HTTP'de COOP header'ı güvenilir olmayan origin'lerde çalışmaz
   async headers() {
-    return [
-      {
-        source: "/:path*",
-        headers: [
-          {
-            key: "Cross-Origin-Opener-Policy",
-            value: "same-origin-allow-popups",
-          },
-        ],
-      },
-    ];
+    // Production'da ve HTTPS kullanıyorsak COOP header'ı ekle
+    // HTTP kullanıyorsanız bu header'ı kaldırın
+    if (process.env.USE_HTTPS === "true") {
+      return [
+        {
+          source: "/:path*",
+          headers: [
+            {
+              key: "Cross-Origin-Opener-Policy",
+              value: "same-origin-allow-popups",
+            },
+          ],
+        },
+      ];
+    }
+    return [];
   },
 };
 

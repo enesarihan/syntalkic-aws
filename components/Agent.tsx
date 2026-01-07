@@ -73,33 +73,53 @@ const Agent = ({
   }, [callStatus, router]);
 
   const handleCall = async () => {
-    setCallStatus(CallStatus.CONNECTING);
+    // Eğer zaten bağlanıyorsa veya aktifse, tekrar başlatma
+    if (callStatus === CallStatus.CONNECTING || callStatus === CallStatus.ACTIVE) {
+      return;
+    }
 
-    if (type === "generate") {
-      await vapi.start(process.env.NEXT_PUBLIC_VAPI_WORKFLOW_ID!, {
-        variableValues: { username: userName, userid: userId },
-      });
-    } else {
-      const formattedQuestions =
-        questions?.map((q) => `- ${q}`).join("\n") || "";
-      const normalizedGender =
-        gender?.toLowerCase() === "male" || gender?.toLowerCase() === "female"
-          ? (gender.toLowerCase() as "male" | "female")
-          : "female";
+    try {
+      setCallStatus(CallStatus.CONNECTING);
 
-      await vapi.start(createSyntalker(normalizedGender), {
-        variableValues: {
-          topic: topic || "Random Chat",
-          role: role || "Friendly Stranger",
-          questions: formattedQuestions,
-        },
-      });
+      if (type === "generate") {
+        await vapi.start(process.env.NEXT_PUBLIC_VAPI_WORKFLOW_ID!, {
+          variableValues: { username: userName, userid: userId },
+        });
+      } else {
+        const formattedQuestions =
+          questions?.map((q) => `- ${q}`).join("\n") || "";
+        const normalizedGender =
+          gender?.toLowerCase() === "male" || gender?.toLowerCase() === "female"
+            ? (gender.toLowerCase() as "male" | "female")
+            : "female";
+
+        await vapi.start(createSyntalker(normalizedGender), {
+          variableValues: {
+            topic: topic || "Random Chat",
+            role: role || "Friendly Stranger",
+            questions: formattedQuestions,
+          },
+        });
+      }
+    } catch (error) {
+      console.error("VAPI start error:", error);
+      setCallStatus(CallStatus.INACTIVE);
+      // Hata mesajını kullanıcıya göster
+      if (error instanceof Error) {
+        alert(`Call başlatılamadı: ${error.message}`);
+      }
     }
   };
 
   const handleDisconnect = async () => {
-    setCallStatus(CallStatus.FINISHED);
-    vapi.stop();
+    try {
+      setCallStatus(CallStatus.FINISHED);
+      await vapi.stop();
+    } catch (error) {
+      console.error("VAPI stop error:", error);
+      // Hata olsa bile durumu sıfırla
+      setCallStatus(CallStatus.INACTIVE);
+    }
   };
 
   const latestMessage = messages[messages.length - 1]?.content;
