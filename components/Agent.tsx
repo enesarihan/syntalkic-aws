@@ -35,8 +35,17 @@ const Agent = ({
   const [messages, setMessages] = useState<SavedMessage[]>([]);
 
   useEffect(() => {
+    // VAPI instance'ının hazır olduğundan emin ol
+    if (!vapi) {
+      console.error("VAPI SDK not initialized");
+      return;
+    }
+
     const onCallStart = () => setCallStatus(CallStatus.ACTIVE);
-    const onCallEnd = () => setCallStatus(CallStatus.FINISHED);
+    const onCallEnd = () => {
+      setCallStatus(CallStatus.FINISHED);
+      setMessages([]); // Mesajları temizle
+    };
     const onMessage = (message: Message) => {
       if (message.type === "transcript" && message.transcriptType === "final") {
         const newMessage = { role: message.role, content: message.transcript };
@@ -47,6 +56,16 @@ const Agent = ({
     const onSpeechEnd = () => setIsSpeaking(false);
     const onError = (error: Error) => {
       console.error("Detailed Vapi Error:", JSON.stringify(error, null, 2));
+      
+      // enumerateDevices hatası için özel işleme
+      const errorMessage = error.message || JSON.stringify(error);
+      if (errorMessage.includes("enumerateDevices") || errorMessage.includes("Cannot read properties")) {
+        setCallStatus(CallStatus.INACTIVE);
+        alert(
+          "Mikrofon cihazlarına erişilemiyor. Bu genellikle HTTP bağlantısı kullanıldığında olur.\n\n" +
+          "Çözüm: Uygulamayı HTTPS üzerinden açın veya localhost kullanın."
+        );
+      }
     };
 
     vapi.on("call-start", onCallStart);
@@ -57,12 +76,24 @@ const Agent = ({
     vapi.on("error", onError);
 
     return () => {
-      vapi.off("call-start", onCallStart);
-      vapi.off("call-end", onCallEnd);
-      vapi.off("message", onMessage);
-      vapi.off("speech-start", onSpeechStart);
-      vapi.off("speech-end", onSpeechEnd);
-      vapi.off("error", onError);
+      // Cleanup: Event listener'ları kaldır
+      try {
+        vapi.off("call-start", onCallStart);
+        vapi.off("call-end", onCallEnd);
+        vapi.off("message", onMessage);
+        vapi.off("speech-start", onSpeechStart);
+        vapi.off("speech-end", onSpeechEnd);
+        vapi.off("error", onError);
+        
+        // Eğer aktif bir çağrı varsa, durdur
+        if (vapi && typeof vapi.isCallActive === "function" && vapi.isCallActive()) {
+          vapi.stop().catch((err) => {
+            console.error("Error stopping VAPI during cleanup:", err);
+          });
+        }
+      } catch (error) {
+        console.error("Error during VAPI cleanup:", error);
+      }
     };
   }, []);
 
@@ -81,6 +112,40 @@ const Agent = ({
     try {
       setCallStatus(CallStatus.CONNECTING);
 
+      // Mikrofon erişim kontrolü
+      if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+        const isLocalhost = window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1";
+        const isHttps = window.location.protocol === "https:";
+        
+        if (!isLocalhost && !isHttps) {
+          alert(
+            "Mikrofon erişimi için HTTPS gereklidir. Lütfen uygulamayı HTTPS üzerinden açın.\n\n" +
+            "EC2'de HTTPS kurulumu için Nginx reverse proxy kullanabilirsiniz."
+          );
+          setCallStatus(CallStatus.INACTIVE);
+          return;
+        }
+      }
+
+      // Mikrofon izni iste (eğer daha önce verilmemişse)
+      try {
+        await navigator.mediaDevices.getUserMedia({ audio: true });
+      } catch (permissionError) {
+        console.error("Microphone permission error:", permissionError);
+        if (permissionError instanceof Error) {
+          if (permissionError.name === "NotAllowedError") {
+            alert("Mikrofon izni reddedildi. Lütfen tarayıcı ayarlarından mikrofon iznini etkinleştirin.");
+          } else if (permissionError.name === "NotFoundError") {
+            alert("Mikrofon bulunamadı. Lütfen bir mikrofon cihazı bağladığınızdan emin olun.");
+          } else {
+            alert(`Mikrofon erişimi hatası: ${permissionError.message}`);
+          }
+        }
+        setCallStatus(CallStatus.INACTIVE);
+        return;
+      }
+
+      // VAPI başlatma işlemi
       if (type === "generate") {
         await vapi.start(process.env.NEXT_PUBLIC_VAPI_WORKFLOW_ID!, {
           variableValues: { username: userName, userid: userId },
@@ -106,7 +171,15 @@ const Agent = ({
       setCallStatus(CallStatus.INACTIVE);
       // Hata mesajını kullanıcıya göster
       if (error instanceof Error) {
-        alert(`Call başlatılamadı: ${error.message}`);
+        // enumerateDevices hatası için özel mesaj
+        if (error.message.includes("enumerateDevices") || error.message.includes("Cannot read properties")) {
+          alert(
+            "Mikrofon cihazlarına erişilemiyor. Bu genellikle HTTP bağlantısı kullanıldığında olur.\n\n" +
+            "Çözüm: Uygulamayı HTTPS üzerinden açın veya localhost kullanın."
+          );
+        } else {
+          alert(`Call başlatılamadı: ${error.message}`);
+        }
       }
     }
   };
