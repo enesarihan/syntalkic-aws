@@ -84,12 +84,12 @@ const Agent = ({
         vapi.off("speech-start", onSpeechStart);
         vapi.off("speech-end", onSpeechEnd);
         vapi.off("error", onError);
-        
-        // Eğer aktif bir çağrı varsa, durdur
-        if (vapi && typeof vapi.isCallActive === "function" && vapi.isCallActive()) {
-          vapi.stop().catch((err) => {
-            console.error("Error stopping VAPI during cleanup:", err);
-          });
+
+        // Çalışan bir çağrı varsa durdurmaya çalış
+        try {
+          vapi.stop();
+        } catch (err) {
+          console.error("Error stopping VAPI during cleanup:", err);
         }
       } catch (error) {
         console.error("Error during VAPI cleanup:", error);
